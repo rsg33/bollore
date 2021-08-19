@@ -6,7 +6,7 @@ User = get_user_model()
 
 class TypeOfMismatch(models.Model):
     """Вид несоответствия"""
-    mismatch = models.CharField(max_length=150, verbose_name='Вид несоответствия')
+    mismatch = models.CharField(max_length=150, verbose_name='Тип несоответствия')
 
 
 class Details(models.Model):
@@ -26,7 +26,6 @@ class Workshops(models.Model):
     responsible_executor = models.ForeignKey(User,
                                              on_delete=models.PROTECT,
                                              related_name='workshops_responsible_executor',
-                                             default='1',
                                              verbose_name='Ответственный исполнитель'
                                              )
 
@@ -34,7 +33,7 @@ class Workshops(models.Model):
 class Defects(models.Model):
     """Дефект"""
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    date_of_discovery = models.DateTimeField(verbose_name='Дата обнаружения')
+    date_defect_detection = models.DateTimeField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
     elimination_defect = models.BooleanField(default=False, verbose_name='Устранение дефекта')
     workshop = models.ForeignKey(Workshops,
@@ -45,7 +44,8 @@ class Defects(models.Model):
     detail = models.ForeignKey(Details,
                                on_delete=models.PROTECT,
                                related_name='defects_detail',
-                               verbose_name='Деталь'
+                               verbose_name='Деталь',
+                               blank=True
                                )
     body_number = models.ForeignKey(Bodies,
                                     on_delete=models.PROTECT,
@@ -53,5 +53,20 @@ class Defects(models.Model):
                                     verbose_name='Номер кузова'
                                     )
     number_of_inconsistencies = models.IntegerField(verbose_name='Количество несоответствий')
-
+    type_of_discrepancy = models.ForeignKey(TypeOfMismatch,
+                                            on_delete=models.PROTECT,
+                                            related_name='defects_type_of_discrepancy',
+                                            verbose_name='Тип несоответствия',
+                                            )
+    discrepancy_description = models.TextField(blank=True, verbose_name='Описание несоответствия')
+    quality_controller = models.ForeignKey(User,
+                                           on_delete=models.PROTECT,
+                                           related_name='defects_quality_controller',
+                                           verbose_name='Контролер ОТК'
+                                           )
+    responsible_executor = models.ForeignKey(User,
+                                             on_delete=models.PROTECT,
+                                             related_name='defects_responsible_executor',
+                                             verbose_name='Ответственный исполнитель'
+                                             )
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото дефекта', blank=True)

@@ -17,7 +17,7 @@ class Details(models.Model):
 
 class Bodies(models.Model):
     """Номера кузовов"""
-    body_number = models.CharField(max_length=150, verbose_name='Номер')
+    body_number = models.CharField(max_length=150, verbose_name='Номер кузова')
 
 
 class Workshops(models.Model):
@@ -33,9 +33,9 @@ class Workshops(models.Model):
 class Defects(models.Model):
     """Дефект"""
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    date_defect_detection = models.DateTimeField(verbose_name='Дата обнаружения')
+    date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
-    elimination_defect = models.BooleanField(default=False, verbose_name='Устранение дефекта')
+    defect_eliminated = models.BooleanField(default=False, verbose_name='Дефект устранён')
     workshop = models.ForeignKey(Workshops,
                                  on_delete=models.PROTECT,
                                  related_name='defects_workshop',
@@ -70,3 +70,12 @@ class Defects(models.Model):
                                              verbose_name='Ответственный исполнитель'
                                              )
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото дефекта', blank=True)
+
+    def __str__(self):
+        return self.body_number
+
+    class Meta:
+        verbose_name = 'дефект'
+        verbose_name_plural = 'Дефекты'
+        ordering = ['-created_at']
+

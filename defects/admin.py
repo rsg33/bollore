@@ -21,4 +21,34 @@ class DefectsAdmin(admin.ModelAdmin):
                     )
 
 
-admin.site.register(Defects)
+class TypeOfMismatchAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'mismatch'
+                    )
+
+
+class DetailsAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'name',
+                    'article'
+                    )
+
+
+class BodiesAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'body_number'
+                    )
+
+
+class WorkshopsAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'name_workshop',
+                    'responsible_executor'
+                    )
+
+
+admin.site.register(Defects, DefectsAdmin)
+admin.site.register(TypeOfMismatch, TypeOfMismatchAdmin)
+admin.site.register(Details, DetailsAdmin)
+admin.site.register(Bodies, BodiesAdmin)
+admin.site.register(Workshops, WorkshopsAdmin)

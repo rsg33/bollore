@@ -8,16 +8,37 @@ class TypeOfMismatch(models.Model):
     """Вид несоответствия"""
     mismatch = models.CharField(max_length=150, verbose_name='Тип несоответствия')
 
+    def __str__(self):
+        return self.mismatch
+
+    class Meta:
+        verbose_name = 'тип несоответствия'
+        verbose_name_plural = 'Типы несоответствий'
+
 
 class Details(models.Model):
     """Детали"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
     article = models.CharField(max_length=150, verbose_name='Артикул')
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'деталь'
+        verbose_name_plural = 'Детали'
+
 
 class Bodies(models.Model):
     """Номера кузовов"""
     body_number = models.CharField(max_length=150, verbose_name='Номер кузова')
+
+    def __str__(self):
+        return self.body_number
+
+    class Meta:
+        verbose_name = 'номер кузова'
+        verbose_name_plural = 'Номера кузовов'
 
 
 class Workshops(models.Model):
@@ -28,6 +49,13 @@ class Workshops(models.Model):
                                              related_name='workshops_responsible_executor',
                                              verbose_name='Ответственный исполнитель'
                                              )
+
+    def __str__(self):
+        return self.name_workshop
+
+    class Meta:
+        verbose_name = 'цех'
+        verbose_name_plural = 'Цеха'
 
 
 class Defects(models.Model):
@@ -78,4 +106,3 @@ class Defects(models.Model):
         verbose_name = 'дефект'
         verbose_name_plural = 'Дефекты'
         ordering = ['-created_at']
-

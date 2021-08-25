@@ -5,10 +5,10 @@ from .models import *
 
 class DefectsAdmin(admin.ModelAdmin):
     list_display = ('id',
-                    'created_at',
                     'date_defect_detection',
                     'term_up_to',
                     'defect_eliminated',
+                    'approved_production',
                     'workshop',
                     'detail',
                     'body_number',
@@ -17,6 +17,7 @@ class DefectsAdmin(admin.ModelAdmin):
                     'discrepancy_description',
                     'quality_controller',
                     'responsible_executor',
+                    'created_at',
                     )
 
 
@@ -52,6 +53,7 @@ class PhotoDefectsAdmin(admin.ModelAdmin):
         'defect',
         'uploaded_at',
     )
+
 
 admin.site.register(Defects, DefectsAdmin)
 admin.site.register(TypeOfMismatch, TypeOfMismatchAdmin)

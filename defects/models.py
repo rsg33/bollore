@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -50,6 +51,9 @@ class Workshops(models.Model):
                                              verbose_name='Ответственный исполнитель'
                                              )
 
+    def get_absolute_url(self):
+        return reverse('workshops', kwargs={'shop_id': self.pk})
+
     def __str__(self):
         return self.name_workshop
 
@@ -64,6 +68,7 @@ class Defects(models.Model):
     date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
     defect_eliminated = models.BooleanField(default=False, verbose_name='Дефект устранён')
+    approved_production = models.BooleanField(default=False, verbose_name='Допущено к производству')
     workshop = models.ForeignKey(Workshops,
                                  on_delete=models.PROTECT,
                                  related_name='defects_workshop',
@@ -99,8 +104,12 @@ class Defects(models.Model):
                                              verbose_name='Ответственный исполнитель'
                                              )
 
+    def get_absolute_url(self):
+        return reverse('defect', kwargs={'defect_id': self.pk})
+
     def __str__(self):
         return self.body_number.body_number
+
     class Meta:
         verbose_name = 'дефект'
         verbose_name_plural = 'Дефекты'

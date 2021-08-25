@@ -1,12 +1,15 @@
-{% load news_tags %}
-{% comment %}
 <div class="list-group">
-  {% get_list_categories as categories %}
-  {% for item in categories %}
-    <a href="{% url 'category' item.pk %}" class="list-group-item list-group-item-action">{{ item.title }}</a>
-  {% endfor %}
-</div>
+    {% if workshop_selected == 0 %}
+        <li class="selected">Все цеха</li>
+    {% else %}
+        <li><a href="{% url 'home' %}">Все цеха</a></li>
+    {% endif %}
 
-<br>
-{% endcomment %}
-{% show_categories %}
+    {% for s in shops %}
+        {% if s.pk == workshop_selected %}
+            <li class="selected">{{ s.name_workshop }}</li>
+        {% else %}
+            <li><a href="{{ s.get_absolute_url }}">{{ s.name_workshop }}</a></li>
+        {% endif %}
+    {% endfor %}
+</div>

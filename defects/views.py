@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.forms import modelformset_factory
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -9,11 +9,31 @@ from .forms import *
 
 def index(request):
     defects = Defects.objects.order_by('-created_at')
-    photos = PhotoDefects.objects.all()
+    shops = Workshops.objects.all()
     context = {
         'defects': defects,
+        'shops': shops,
         'title': 'Список дефектов',
-        'photos': photos
+        'workshop_selected': 0,
+    }
+    return render(request, 'defects/index.html', context)
+
+
+def show_defect(request, defect_id):
+    return HttpResponse(f"Дефект c id = {defect_id}")
+
+
+def show_workshops(request, shop_id):
+    defects = Defects.objects.filter(workshop_id=shop_id)
+    shops = Workshops.objects.all()
+
+    if len(defects) == 0:
+        raise Http404
+    context = {
+        'defects': defects,
+        'title': 'Отображение по цехам',
+        'shops': shops,
+        'workshop_selected': shop_id,
     }
     return render(request, 'defects/index.html', context)
 

@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import add_defect
+from .views import *
 
 urlpatterns = [
-    path('', add_defect),
+    path('', index, name='home'),
+    path('defects/add-defect/', add_defect, name='add_defect')
 ]

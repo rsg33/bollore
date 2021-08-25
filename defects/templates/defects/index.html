@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+    {{ title }}  :: {{ block.super }}
+{% endblock %}
 
-</body>
-</html>
+{#{% block sidebar %}#}
+{#  {% include 'inc/_sidebar.html' %}#}
+{#{% endblock %}#}
+
+{% block content %}
+    {% for item in defects %}
+        <div class="card mb-3">
+            <div class="card-header">
+                Номер кузова: <a href="{{ item.category.get_absolute_url }}">{{ item.body_number }}</a>
+            </div>
+            <div class="card-header">Дата обнаружения: {{ item.date_defect_detection }}
+                <br> Срок до: {{ item.term_up_to }}
+                <br> Дефект устранен:
+                {% if item.defect_eliminated %}
+                   <p style="background-color:#ff0000; color:#ffffff"> ДА </p>
+                {% else %}
+                     <p style="background-color:#ff0000; color:#ffffff">НЕТ</p>
+                {% endif %}
+                 Цех: {{ item.workshop }}
+                <br> Деталь: {{ item.detail }}
+                <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
+                <br> Тип несоответствия: {{ item.type_of_discrepancy }}
+                <br> Описание несоответствия: {{ item.discrepancy_description }}
+                <br> Контролер ОТК: {{ item.quality_controller }}
+                <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
+                {{ item.responsible_executor.first_name }}
+            </div>
+
+            <div class="card-body">
+                <div class="media">
+                    {% if item.photo %}
+                        <img src="{{ item.photo.url }}" alt="" width="350" class="mr-3">
+                    {% else %}
+                        <img src="https://picsum.photos/id/1060/350/300/?blur=2" alt="" class="mr-3">
+                    {% endif %}
+                    <div class="media-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text"><br> Описание несоответствия: {{ item.discrepancy_description|linebreaks|truncatewords:50 }}</p>
+                        <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                {{ item.created_at|date:"Y-m-d H:i:s" }}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

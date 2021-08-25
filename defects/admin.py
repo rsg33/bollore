@@ -17,7 +17,6 @@ class DefectsAdmin(admin.ModelAdmin):
                     'discrepancy_description',
                     'quality_controller',
                     'responsible_executor',
-                    'photo'
                     )
 
 
@@ -47,8 +46,16 @@ class WorkshopsAdmin(admin.ModelAdmin):
                     )
 
 
+class PhotoDefectsAdmin(admin.ModelAdmin):
+    list_display = (
+        'photo',
+        'defect',
+        'uploaded_at',
+    )
+
 admin.site.register(Defects, DefectsAdmin)
 admin.site.register(TypeOfMismatch, TypeOfMismatchAdmin)
 admin.site.register(Details, DetailsAdmin)
 admin.site.register(Bodies, BodiesAdmin)
 admin.site.register(Workshops, WorkshopsAdmin)
+admin.site.register({PhotoDefects}, PhotoDefectsAdmin)

@@ -86,7 +86,8 @@ class Defects(models.Model):
                                             related_name='defects_type_of_discrepancy',
                                             verbose_name='Тип несоответствия',
                                             )
-    discrepancy_description = models.TextField(blank=True, verbose_name='Описание несоответствия')
+    discrepancy_description = models.TextField(blank=True, verbose_name='Описание несоответствия',
+                                               default='Отсутствует')
     quality_controller = models.ForeignKey(User,
                                            on_delete=models.PROTECT,
                                            related_name='defects_quality_controller',
@@ -97,12 +98,21 @@ class Defects(models.Model):
                                              related_name='defects_responsible_executor',
                                              verbose_name='Ответственный исполнитель'
                                              )
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото дефекта', blank=True)
 
     def __str__(self):
-        return self.body_number
-
+        return self.body_number.body_number
     class Meta:
         verbose_name = 'дефект'
         verbose_name_plural = 'Дефекты'
         ordering = ['-created_at']
+
+
+class PhotoDefects(models.Model):
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото дефекта', blank=True)
+    defect = models.ForeignKey(Defects, on_delete=models.CASCADE, related_name="images", verbose_name='Дефект')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'фото'
+        verbose_name_plural = 'Фото дефектов'
+        ordering = ['-uploaded_at']

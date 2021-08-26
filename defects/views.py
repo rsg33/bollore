@@ -66,7 +66,7 @@ def show_body(request, body_id):
     }
     return render(request, 'defects/index.html', context)
 
-@login_required
+#@login_required
 def add_defect(request):
     ImageFormSet = modelformset_factory(PhotoDefects,
                                         form=ImageForm, extra=2)

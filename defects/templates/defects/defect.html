@@ -10,9 +10,7 @@
                 Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
             </div>
 
-
             <div class="card-header">
-
                 {% if item.defect_eliminated %}
                     <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
                 {% else %}
@@ -22,15 +20,35 @@
                 <br> Срок до: {{ item.term_up_to }}
                 <br>
                 <br> Цех: {{ item.workshop }}
-                <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
+                <br> Деталь: {{ item.detail }}
+                <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
+                <br> Тип несоответствия: {{ item.type_of_discrepancy }}
+                <br> Описание несоответствия: {{ item.discrepancy_description }}
+                <br> Контролер ОТК: {{ item.quality_controller }}
                 <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
                 {{ item.responsible_executor.first_name }} <br>
-                <br> <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
+            </div>
+
+            <div class="card-body">
+                <div class="media">
+
+                    {% if photos %}
+                        {% for i in photos %}
+                            <img src="{{ i.photo.url }}" alt="" width="350" class="mr-3">
+                        {% endfor %}
+                    {% else %}
+                        <p>ФОТО НЕ ЗАГРУЖЕНО</p>
+                        <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350" class="mr-3">
+                    {% endif %}
+
+
+                </div>
             </div>
 
             <div class="card-footer text-muted">
                 {{ item.created_at|date:"Y-m-d H:i:s" }}
             </div>
+
         </div>
     {% endfor %}
 {% endblock %}

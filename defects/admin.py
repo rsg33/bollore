@@ -19,32 +19,36 @@ class DefectsAdmin(admin.ModelAdmin):
                     'responsible_executor',
                     'created_at',
                     )
+    list_display_links = ('date_defect_detection',)
+    list_editable = ('defect_eliminated', 'approved_production',)
+    search_fields = ('body_number__body_number', 'workshop__name_workshop',)
 
 
 class TypeOfMismatchAdmin(admin.ModelAdmin):
-    list_display = ('id',
-                    'mismatch'
-                    )
+    list_display = ('mismatch',)
+    list_display_links = ('mismatch',)
 
 
 class DetailsAdmin(admin.ModelAdmin):
     list_display = ('id',
+                    'article',
                     'name',
-                    'article'
                     )
+    list_display_links = ('article',)
+    search_fields = ('article',)
 
 
 class BodiesAdmin(admin.ModelAdmin):
-    list_display = ('id',
-                    'body_number'
-                    )
+    list_display = ('body_number', 'id',)
+    list_display_links = ('body_number',)
+    search_fields = ('body_number',)
 
 
 class WorkshopsAdmin(admin.ModelAdmin):
-    list_display = ('id',
-                    'name_workshop',
-                    'responsible_executor'
+    list_display = ('name_workshop',
+                    'responsible_executor',
                     )
+    list_display_links = ('name_workshop',)
 
 
 class PhotoDefectsAdmin(admin.ModelAdmin):
@@ -53,6 +57,7 @@ class PhotoDefectsAdmin(admin.ModelAdmin):
         'defect',
         'uploaded_at',
     )
+    list_display_links = ('defect',)
 
 
 admin.site.register(Defects, DefectsAdmin)

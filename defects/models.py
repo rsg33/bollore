@@ -34,6 +34,9 @@ class Bodies(models.Model):
     """Номера кузовов"""
     body_number = models.CharField(max_length=150, verbose_name='Номер кузова')
 
+    def get_absolute_url(self):
+        return reverse('bodies', kwargs={'body_id': self.pk})
+
     def __str__(self):
         return self.body_number
 

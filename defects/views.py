@@ -10,9 +10,11 @@ from .forms import *
 def index(request):
     defects = Defects.objects.order_by('-created_at')
     shops = Workshops.objects.all()
+    bodies = Bodies.objects.all()
     context = {
         'defects': defects,
         'shops': shops,
+        'bodies': bodies,
         'title': 'Список дефектов',
         'workshop_selected': 0,
     }
@@ -20,7 +22,20 @@ def index(request):
 
 
 def show_defect(request, defect_id):
-    return HttpResponse(f"Дефект c id = {defect_id}")
+    defects = Defects.objects.filter(pk=defect_id)
+    photos = PhotoDefects.objects.filter(defect_id=defect_id)
+    shops = Workshops.objects.all()
+    bodies = Bodies.objects.all()
+    print(photos)
+    context = {
+        'defects': defects,
+        'photos': photos,
+        'shops': shops,
+        'bodies': bodies,
+        'title': 'Список дефектов',
+        'workshop_selected': 0,
+    }
+    return render(request, 'defects/defect.html', context)
 
 
 def show_workshops(request, shop_id):
@@ -37,6 +52,19 @@ def show_workshops(request, shop_id):
     }
     return render(request, 'defects/index.html', context)
 
+
+def show_body(request, body_id):
+    defects = Defects.objects.filter(body_number_id=body_id)
+    shops = Workshops.objects.all()
+
+    if len(defects) == 0:
+        raise Http404
+    context = {
+        'defects': defects,
+        'title': 'Отображение по цехам',
+        'shops': shops,
+    }
+    return render(request, 'defects/index.html', context)
 
 @login_required
 def add_defect(request):

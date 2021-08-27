@@ -24,7 +24,7 @@
                 <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
                 <br> Тип несоответствия: {{ item.type_of_discrepancy }}
                 <br> Описание несоответствия: {{ item.discrepancy_description }}
-                <br> Контролер ОТК: {{ item.quality_controller }}
+                <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
                 {{ item.responsible_executor.first_name }} <br>
             </div>

@@ -16,46 +16,60 @@
 {#</nav>#}
 
 
-
 <ul class="nav nav-tabs justify-content-center">
 
     <li class="nav-item">
-    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bollore</a>
-  </li>
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bollore</a>
+    </li>
 
-  <li class="nav-item ">
-    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Дефекты</a>
-  </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Номера кузовов</a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-      <li><hr class="dropdown-divider"></li>
-      <li><a class="dropdown-item" href="#">Separated link</a></li>
-    </ul>
-  </li>
-
+    <li class="nav-item ">
+        <a class="nav-link" aria-current="page" href="{% url 'home' %}">Дефекты</a>
+    </li>
 
     <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Дефекты в цехах</a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-      <li><hr class="dropdown-divider"></li>
-      <li><a class="dropdown-item" href="#">Separated link</a></li>
-    </ul>
-  </li>
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Дефекты
+            в цехах</a>
+        <ul class="dropdown-menu">
+            {% for s in shops %}
+                {% if s.pk == workshop_selected %}
+                    <li><a class="dropdown-item">{{ s.name_workshop }}</a></li>
+                {% else %}
+                    <li><a class="dropdown-item" href="{{ s.get_absolute_url }}">{{ s.name_workshop }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'home' %}">Все цеха</a></li>
+        </ul>
+    </li>
 
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Дефекты
+            по несоответствию</a>
+        <ul class="dropdown-menu">
+            {% for s in disagreement %}
+                {% if s.pk == workshop_selected %}
+                    <li><a class="dropdown-item">{{ s.mismatch }}</a></li>
+                {% else %}
+                    <li><a class="dropdown-item" href="{{ s.get_absolute_url }}">{{ s.mismatch }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'home' %}">Все дефекты</a></li>
+        </ul>
+    </li>
 
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'add_defect' %}">Добавить дефект</a>
-  </li>
+    <li class="nav-item ">
+        <a class="nav-link" href="{% url 'all-bodies' %}">Картотека кузовов</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'add_defect' %}">Добавить дефект</a>
+    </li>
 </ul>
-
-
 
 
 {#<ul class="nav justify-content-center">#}

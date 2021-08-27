@@ -5,9 +5,36 @@ from django.urls import reverse
 User = get_user_model()
 
 
+class Priorities(models.Model):
+    """Приоритет"""
+    priority = models.CharField(max_length=150, verbose_name='Приоритет')
+
+    def __str__(self):
+        return self.priority
+
+    class Meta:
+        verbose_name = 'приоритет'
+        verbose_name_plural = 'Приоритеты'
+
+
+class Statuses(models.Model):
+    """Статусы дефекта"""
+    status = models.CharField(max_length=150, verbose_name='Статус дефекта')
+
+    def __str__(self):
+        return self.status
+
+    class Meta:
+        verbose_name = 'статус дефекта'
+        verbose_name_plural = 'Статусы дефекта'
+
+
 class TypeOfMismatch(models.Model):
     """Вид несоответствия"""
     mismatch = models.CharField(max_length=150, verbose_name='Тип несоответствия')
+
+    def get_absolute_url(self):
+        return reverse('disagreement', kwargs={'disagreement_id': self.pk})
 
     def __str__(self):
         return self.mismatch
@@ -70,8 +97,22 @@ class Defects(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
+
+    defect_priority = models.ForeignKey(Priorities,
+                                      on_delete=models.PROTECT,
+                                      related_name='defects_priority',
+                                      verbose_name='Приоритет'
+                                      )
+
+    defect_status = models.ForeignKey(Statuses,
+                                      on_delete=models.PROTECT,
+                                      related_name='defects_status',
+                                      verbose_name='Статус дефекта'
+                                      )
+
     defect_eliminated = models.BooleanField(default=False, verbose_name='Дефект устранён')
     approved_production = models.BooleanField(default=False, verbose_name='Допущено к производству')
+
     workshop = models.ForeignKey(Workshops,
                                  on_delete=models.PROTECT,
                                  related_name='defects_workshop',

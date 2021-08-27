@@ -7,7 +7,7 @@
 
 
   <link rel="stylesheet" href="{% static 'defects/bootstrap/css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'defects/css/style.css' %}">
+{#  <link rel="stylesheet" href="{% static 'defects/css/style.css' %}">#}
 
   <title>{% block title %}Проект Bollore{% endblock %}</title>
 </head>
@@ -17,11 +17,11 @@
 <div class="container mt-3">
   <div class="row">
 
-    <div class="col-md-3">
-      {% block sidebar %} {% include 'inc/_sidebar.html' %} {% endblock %}
-    </div>
+{#    <div class="col-md-3">#}
+{#      {% block sidebar %} {% include 'inc/_sidebar.html' %} {% endblock %}#}
+{#    </div>#}
 
-    <div class="col-md-9">
+    <div class="col-md-12">
       {% block content %} CONTENT {% endblock %}
     </div>
 

@@ -7,8 +7,6 @@ class DefectsAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'date_defect_detection',
                     'term_up_to',
-                    'defect_eliminated',
-                    'approved_production',
                     'workshop',
                     'detail',
                     'body_number',
@@ -20,7 +18,6 @@ class DefectsAdmin(admin.ModelAdmin):
                     'created_at',
                     )
     list_display_links = ('date_defect_detection',)
-    list_editable = ('defect_eliminated', 'approved_production',)
     search_fields = ('body_number__body_number', 'workshop__name_workshop',)
 
 

@@ -6,15 +6,17 @@
 {% block content %}
 
     <div class="card mb-3">
-            <div class="card-header">
-                Сводка по дефектам на {% now "d-m-Y H:i" %}</a>
-            </div>
-    <div class="card-header">
-        Всего: {{ defects.count }}
-        <br> С дефектом: {{ counters.defect_count }}
-        <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
-        <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
-    </div>
+        <div class="card-header">
+            Сводка по дефектам на {% now "d-m-Y H:i" %}</a>
+        </div>
+        <div class="card-header">
+            Всего: {{ defects.count }}
+            <br> С дефектом: {{ counters.defect_count }}
+            <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
+            <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
+            <br> Брак : {{ production_defect_count }}
+
+        </div>
     </div>
 
     {% for item in defects %}
@@ -22,7 +24,6 @@
             <div class="card-header">
                 Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
             </div>
-
 
             <div class="card-header">
 
@@ -36,6 +37,19 @@
                 Дата обнаружения: {{ item.date_defect_detection }}
                 <br> Срок до: {{ item.term_up_to }}
                 <br>
+
+                {% if item.probability_estimate * item.scale_of_consequences > 1 %}
+                    <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
+                {% elif item.defect_eliminated %}
+                    <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>
+                {% elif item.defect_eliminated %}
+                    <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>
+                {% elif item.defect_eliminated %}
+                    <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+                {% endif %}
+
+
+                <br
                 <br> Цех: {{ item.workshop }}
                 <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}

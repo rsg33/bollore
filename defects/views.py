@@ -13,10 +13,10 @@ def index(request):
     shops = Workshops.objects.all()
     disagreement = TypeOfMismatch.objects.all()
     bodies = Bodies.objects.all()
-    counters = {'defect_count': Defects.objects.filter(defect_eliminated=False).count(),
-                'defect_approved_count': Defects.objects.filter(approved_production=True).count(),
-                'defect_eliminated_count': Defects.objects.filter(defect_eliminated=True,
-                                                                  approved_production=False).count(),
+    counters = {'defect_count': Defects.objects.filter(status=1).count(),
+                'defect_eliminated_count': Defects.objects.filter(status=2).count(),
+                'defect_approved_count': Defects.objects.filter(status=3).count(),
+                'production_defect_count': Defects.objects.filter(status=4).count(),
                 }
     context = {
         'defects': defects,
@@ -36,7 +36,7 @@ def show_defect(request, defect_id):
     photos = PhotoDefects.objects.filter(defect_id=defect_id)
     shops = Workshops.objects.all()
     bodies = Bodies.objects.all()
-    print(photos)
+    # print(photos)
     context = {
         'defects': defects,
         'photos': photos,
@@ -53,13 +53,13 @@ def show_workshops(request, shop_id):
     defects = Defects.objects.filter(workshop_id=shop_id)
     shops = Workshops.objects.all()
     disagreement = TypeOfMismatch.objects.all()
-    counters = {'defect_count': Defects.objects.filter(workshop_id=shop_id).filter(defect_eliminated=False).count(),
-                'defect_approved_count': Defects.objects.filter(workshop_id=shop_id).filter(approved_production=True
-                                                                                            ).count(),
-                'defect_eliminated_count': Defects.objects.filter(
-                    workshop_id=shop_id).filter(defect_eliminated=True,
-                                                approved_production=False).count(),
-                }
+    # counters = {'defect_count': Defects.objects.filter(workshop_id=shop_id).filter(defect_eliminated=False).count(),
+    #             'defect_approved_count': Defects.objects.filter(workshop_id=shop_id).filter(approved_production=True
+    #                                                                                         ).count(),
+    #             'defect_eliminated_count': Defects.objects.filter(
+    #                 workshop_id=shop_id).filter(defect_eliminated=True,
+    #                                             approved_production=False).count(),
+    #             }
     if len(defects) == 0:
         raise Http404
     context = {
@@ -82,7 +82,7 @@ def show_disagreement(request, disagreement_id):
         defect_eliminated=False).count(),
                 'defect_approved_count': Defects.objects.filter(type_of_discrepancy_id=disagreement_id).filter(
                     approved_production=True
-                    ).count(),
+                ).count(),
                 'defect_eliminated_count': Defects.objects.filter(
                     type_of_discrepancy_id=disagreement_id).filter(defect_eliminated=True,
                                                                    approved_production=False).count(),

@@ -10,7 +10,7 @@ class DefectForm(forms.ModelForm):
 
     class Meta:
         model = Defects
-        fields = ['date_defect_detection', 'term_up_to', 'defect_eliminated', 'workshop']
+        fields = ['date_defect_detection', 'term_up_to', 'workshop']
 
 
 class ImageForm(forms.ModelForm):

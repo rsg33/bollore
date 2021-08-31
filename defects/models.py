@@ -5,30 +5,6 @@ from django.urls import reverse
 User = get_user_model()
 
 
-class Priorities(models.Model):
-    """Приоритет"""
-    priority = models.CharField(max_length=150, verbose_name='Приоритет')
-
-    def __str__(self):
-        return self.priority
-
-    class Meta:
-        verbose_name = 'приоритет'
-        verbose_name_plural = 'Приоритеты'
-
-
-class Statuses(models.Model):
-    """Статусы дефекта"""
-    status = models.CharField(max_length=150, verbose_name='Статус дефекта')
-
-    def __str__(self):
-        return self.status
-
-    class Meta:
-        verbose_name = 'статус дефекта'
-        verbose_name_plural = 'Статусы дефекта'
-
-
 class TypeOfMismatch(models.Model):
     """Вид несоответствия"""
     mismatch = models.CharField(max_length=150, verbose_name='Тип несоответствия')
@@ -47,7 +23,7 @@ class TypeOfMismatch(models.Model):
 class Details(models.Model):
     """Детали"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
-    article = models.CharField(max_length=150, verbose_name='Артикул')
+    article = models.CharField(max_length=150, unique=True, verbose_name='Артикул')
 
     def __str__(self):
         return self.name
@@ -59,7 +35,7 @@ class Details(models.Model):
 
 class Bodies(models.Model):
     """Номера кузовов"""
-    body_number = models.CharField(max_length=150, verbose_name='Номер кузова')
+    body_number = models.CharField(max_length=150, unique=True, verbose_name='Номер кузова')
 
     def get_absolute_url(self):
         return reverse('bodies', kwargs={'body_id': self.pk})
@@ -94,24 +70,47 @@ class Workshops(models.Model):
 
 class Defects(models.Model):
     """Дефект"""
+    """Определение уровня риска"""
+    PROBABILITY_ESTIMATE = (
+        (1, 'Крайне маловероятно'),
+        (2, 'Маловероятно'),
+        (3, 'Возможно'),
+        (4, 'Весьма вероятно'),
+        (5, 'Практически достоверно'),
+    )
+    """Качественная оценка вероятности"""
+
+    SCALE_OF_CONSEQUENCES = (
+        (1, 'Незначительный'),
+        (2, 'Небольшой'),
+        (3, 'Средний'),
+        (4, 'Высокий'),
+        (5, 'Крайне высокий'),
+    )
+    """Масштаб последствий реализации риска"""
+
+    STATUS = (
+        (1, 'Обнаружен дефект'),
+        (2, 'Дефект устранён'),
+        (3, 'Допущено к производству'),
+        (4, 'Брак'),
+    )
+    """Статус дефекта"""
+
+    PRIORITY = (
+        (1, 'Низкий'),
+        (2, 'Средний'),
+        (3, 'Высокий'),
+        (4, 'Срочный'),
+    )
+    """Приоритет"""
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
-
-    defect_priority = models.ForeignKey(Priorities,
-                                      on_delete=models.PROTECT,
-                                      related_name='defects_priority',
-                                      verbose_name='Приоритет'
-                                      )
-
-    defect_status = models.ForeignKey(Statuses,
-                                      on_delete=models.PROTECT,
-                                      related_name='defects_status',
-                                      verbose_name='Статус дефекта'
-                                      )
-
-    defect_eliminated = models.BooleanField(default=False, verbose_name='Дефект устранён')
-    approved_production = models.BooleanField(default=False, verbose_name='Допущено к производству')
+    status = models.IntegerField(choices=STATUS,
+                                 default=1,
+                                 verbose_name='Статус дефекта')
 
     workshop = models.ForeignKey(Workshops,
                                  on_delete=models.PROTECT,
@@ -127,14 +126,22 @@ class Defects(models.Model):
     body_number = models.ForeignKey(Bodies,
                                     on_delete=models.PROTECT,
                                     related_name='defects_body_number',
-                                    verbose_name='Номер кузова'
+                                    verbose_name='Номер кузова',
+                                    unique=True
                                     )
-    number_of_inconsistencies = models.IntegerField(verbose_name='Количество несоответствий')
     type_of_discrepancy = models.ForeignKey(TypeOfMismatch,
                                             on_delete=models.PROTECT,
                                             related_name='defects_type_of_discrepancy',
                                             verbose_name='Тип несоответствия',
                                             )
+    number_of_inconsistencies = models.IntegerField(verbose_name='Количество несоответствий')
+    probability_estimate = models.IntegerField(choices=PROBABILITY_ESTIMATE,
+                                               default=3,
+                                               verbose_name='Качественная оценка вероятности')
+    scale_of_consequences = models.IntegerField(choices=SCALE_OF_CONSEQUENCES,
+                                                default=3,
+                                                verbose_name='Масштаб последствий')
+    priority = models.IntegerField(choices=PRIORITY, default=2, verbose_name='Приоритет')
     discrepancy_description = models.TextField(blank=True, verbose_name='Описание несоответствия',
                                                default='Отсутствует')
     quality_controller = models.ForeignKey(User,

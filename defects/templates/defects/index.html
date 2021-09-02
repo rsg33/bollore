@@ -38,15 +38,15 @@
                 <br> Срок до: {{ item.term_up_to }}
                 <br>
 
-                {% if item.probability_estimate * item.scale_of_consequences > 1 %}
-                    <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
-                {% elif item.defect_eliminated %}
-                    <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>
-                {% elif item.defect_eliminated %}
-                    <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>
-                {% elif item.defect_eliminated %}
-                    <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
-                {% endif %}
+{#                {% if item.probability_estimate * item.scale_of_consequences > 1 %}#}
+{#                    <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>#}
+{#                {% elif item.defect_eliminated %}#}
+{#                    <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>#}
+{#                {% elif item.defect_eliminated %}#}
+{#                    <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>#}
+{#                {% elif item.defect_eliminated %}#}
+{#                    <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>#}
+{#                {% endif %}#}
 
 
                 <br

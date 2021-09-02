@@ -20,6 +20,14 @@ class TypeOfMismatch(models.Model):
         verbose_name_plural = 'Типы несоответствий'
 
 
+class NumberOfInconsistencies(models.Model):
+    number = models.IntegerField(verbose_name='Количество несоответствий')
+
+    class Meta:
+        verbose_name = 'колличество несоответствий'
+        verbose_name_plural = 'Колличество несоответствий'
+
+
 class Details(models.Model):
     """Детали"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
@@ -68,49 +76,88 @@ class Workshops(models.Model):
         verbose_name_plural = 'Цеха'
 
 
-class Defects(models.Model):
-    """Дефект"""
-    """Определение уровня риска"""
-    PROBABILITY_ESTIMATE = (
-        (1, 'Крайне маловероятно'),
-        (2, 'Маловероятно'),
-        (3, 'Возможно'),
-        (4, 'Весьма вероятно'),
-        (5, 'Практически достоверно'),
-    )
+class ProbabilityEstimate(models.Model):
     """Качественная оценка вероятности"""
+    score = models.IntegerField(default=1, verbose_name='Балл')
+    description = models.CharField(max_length=150, verbose_name='Оценка')
 
-    SCALE_OF_CONSEQUENCES = (
-        (1, 'Незначительный'),
-        (2, 'Небольшой'),
-        (3, 'Средний'),
-        (4, 'Высокий'),
-        (5, 'Крайне высокий'),
-    )
+    def __str__(self):
+        return self.description
+
+    class Meta:
+        verbose_name = 'оценка вероятности'
+        verbose_name_plural = 'Оценки вероятности'
+
+        # (1, 'Крайне маловероятно'),
+        # (2, 'Маловероятно'),
+        # (3, 'Возможно'),
+        # (4, 'Весьма вероятно'),
+        # (5, 'Практически достоверно'),
+
+
+class ScaleOfConsequences(models.Model):
     """Масштаб последствий реализации риска"""
 
-    STATUS = (
-        (1, 'Обнаружен дефект'),
-        (2, 'Дефект устранён'),
-        (3, 'Допущено к производству'),
-        (4, 'Брак'),
-    )
+    score = models.IntegerField(default=1, verbose_name='Балл')
+    description = models.CharField(max_length=150, verbose_name='Оценка')
+
+    def __str__(self):
+        return self.description
+
+    class Meta:
+        verbose_name = 'масштаб последствий'
+        verbose_name_plural = 'Масштабы последствий'
+
+        # (1, 'Незначительный'),
+        # (2, 'Небольшой'),
+        # (3, 'Средний'),
+        # (4, 'Высокий'),
+        # (5, 'Крайне высокий')
+
+
+class Status(models.Model):
     """Статус дефекта"""
+    defect_status = models.CharField(max_length=150, verbose_name='Статус дефекта')
 
-    PRIORITY = (
-        (1, 'Низкий'),
-        (2, 'Средний'),
-        (3, 'Высокий'),
-        (4, 'Срочный'),
-    )
+    def __str__(self):
+        return self.defect_status
+
+    class Meta:
+        verbose_name = 'статус дефекта'
+        verbose_name_plural = 'статусы дефектов'
+
+        # (1, 'Обнаружен дефект'),
+        # (2, 'Дефект устранён'),
+        # (3, 'Допущено к производству'),
+        # (4, 'Брак'),
+
+
+class Priority(models.Model):
     """Приоритет"""
+    priority_status = models.CharField(max_length=150, verbose_name='Приоритет')
 
+    def __str__(self):
+        return self.priority_status
+
+    class Meta:
+        verbose_name = 'приоритет дефекта'
+        verbose_name_plural = 'Приоритеты дефектов'
+        # (1, 'Низкий'),
+        # (2, 'Средний'),
+        # (3, 'Высокий'),
+        # (4, 'Срочный'),
+
+
+class Defects(models.Model):
+    """Дефект"""
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
-    status = models.IntegerField(choices=STATUS,
-                                 default=1,
-                                 verbose_name='Статус дефекта')
+    status = models.ForeignKey(Status,
+                               on_delete=models.PROTECT,
+                               related_name='defects_status',
+                               verbose_name='Статус дефекта',
+                               )
 
     workshop = models.ForeignKey(Workshops,
                                  on_delete=models.PROTECT,
@@ -127,21 +174,35 @@ class Defects(models.Model):
                                     on_delete=models.PROTECT,
                                     related_name='defects_body_number',
                                     verbose_name='Номер кузова',
-                                    unique=True
                                     )
     type_of_discrepancy = models.ForeignKey(TypeOfMismatch,
                                             on_delete=models.PROTECT,
                                             related_name='defects_type_of_discrepancy',
                                             verbose_name='Тип несоответствия',
                                             )
-    number_of_inconsistencies = models.IntegerField(verbose_name='Количество несоответствий')
-    probability_estimate = models.IntegerField(choices=PROBABILITY_ESTIMATE,
-                                               default=3,
-                                               verbose_name='Качественная оценка вероятности')
-    scale_of_consequences = models.IntegerField(choices=SCALE_OF_CONSEQUENCES,
-                                                default=3,
-                                                verbose_name='Масштаб последствий')
-    priority = models.IntegerField(choices=PRIORITY, default=2, verbose_name='Приоритет')
+    number_of_inconsistencies = models.ForeignKey(NumberOfInconsistencies,
+                                                  on_delete=models.PROTECT,
+                                                  related_name='defects_number_inconsistencies',
+                                                  verbose_name='Колличество несоответствий',
+                                                  )
+    probability_estimate = models.ForeignKey(Status,
+                                             on_delete=models.PROTECT,
+                                             related_name='defects_probability',
+                                             verbose_name='Качественная оценка вероятности',
+                                             )
+
+    scale_of_consequences = models.ForeignKey(ScaleOfConsequences,
+                                              on_delete=models.PROTECT,
+                                              related_name='defects_scale',
+                                              verbose_name='Масштаб последствий',
+                                              )
+
+    priority = models.ForeignKey(ScaleOfConsequences,
+                                 on_delete=models.PROTECT,
+                                 related_name='defects_priority',
+                                 verbose_name='Приоритет',
+                                 )
+
     discrepancy_description = models.TextField(blank=True, verbose_name='Описание несоответствия',
                                                default='Отсутствует')
     quality_controller = models.ForeignKey(User,

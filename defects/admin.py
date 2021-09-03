@@ -8,11 +8,6 @@ class TypeOfMismatchAdmin(admin.ModelAdmin):
     list_display_links = ('mismatch',)
 
 
-class NumberOfInconsistenciesAdmin(admin.ModelAdmin):
-    list_display = ('number',)
-    list_display_links = ('number',)
-
-
 class DetailsAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'article',
@@ -51,15 +46,15 @@ class ScaleOfConsequencesAdmin(admin.ModelAdmin):
 
 class StatusAdmin(admin.ModelAdmin):
     list_display = (
-                    'defect_status',
-                    )
+        'defect_status',
+    )
     list_display_links = ('defect_status',)
 
 
 class PriorityAdmin(admin.ModelAdmin):
     list_display = (
-                    'priority_status',
-                    )
+        'priority_status',
+    )
     list_display_links = ('priority_status',)
 
 
@@ -76,6 +71,7 @@ class DefectsAdmin(admin.ModelAdmin):
                     'quality_controller',
                     'responsible_executor',
                     'created_at',
+                    'risk_level',
                     )
     list_display_links = ('date_defect_detection',)
     search_fields = ('body_number__body_number', 'workshop__name_workshop',)
@@ -91,7 +87,6 @@ class PhotoDefectsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TypeOfMismatch, TypeOfMismatchAdmin)
-admin.site.register(NumberOfInconsistencies, NumberOfInconsistenciesAdmin)
 admin.site.register(Details, DetailsAdmin)
 admin.site.register(Bodies, BodiesAdmin)
 admin.site.register(Workshops, WorkshopsAdmin)

@@ -1,54 +1,64 @@
 {% extends 'base.html' %}
 {% block title %}
-    {{ title }}  :: {{ block.super }}
+  {{ title }}  :: {{ block.super }}
 {% endblock %}
 
 {% block content %}
-    {% for item in defects %}
-        <div class="card mb-3">
-            <div class="card-header">
-                Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
-            </div>
+  {% for item in defects %}
+    <div class="card mb-3">
+      <div class="card-header">
+        Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
+      </div>
 
-            <div class="card-header">
-                {% if item.defect_eliminated %}
-                    <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
-                {% else %}
-                    <p style="background-color:#ff0000; color:#ffffff">ДЕФЕКТ</p>
-                {% endif %}
-                Дата обнаружения: {{ item.date_defect_detection }}
-                <br> Срок до: {{ item.term_up_to }}
-                <br>
-                <br> Цех: {{ item.workshop }}
-                <br> Деталь: {{ item.detail }}
-                <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
-                <br> Тип несоответствия: {{ item.type_of_discrepancy }}
-                <br> Описание несоответствия: {{ item.discrepancy_description }}
-                <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
-                <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
-                {{ item.responsible_executor.first_name }} <br>
-            </div>
+      <div class="card-header">
+        {% if item.defect_eliminated %}
+          <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
+        {% else %}
+          <p style="background-color:#ff0000; color:#ffffff">ДЕФЕКТ</p>
+        {% endif %}
+        Дата обнаружения: {{ item.date_defect_detection }}
+        <br> Срок до: {{ item.term_up_to }}
+        <br>
 
-            <div class="card-body">
-                <div class="media">
+        {% if item.risk_level == 'Невысокий риск' %}
+          <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
+        {% elif item.risk_level == 'Средний риск' %}
+          <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>
+        {% elif item.risk_level == 'Высокий риск' %}
+          <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>
+        {% elif item.risk_level == 'Крайне высокий риск' %}
+          <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+        {% endif %}
+        <br> Цех: {{ item.workshop }}
+        <br> Деталь: {{ item.detail }}
+        <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
+        <br> Тип несоответствия: {{ item.type_of_discrepancy }}
+        <br> Описание несоответствия: {{ item.discrepancy_description }}
+        <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
+        <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
+        {{ item.responsible_executor.first_name }} <br>
+      </div>
 
-                    {% if photos %}
-                        {% for i in photos %}
-                            <img src="{{ i.photo.url }}" alt="" width="350" class="mr-3">
-                        {% endfor %}
-                    {% else %}
-                        <p>ФОТО НЕ ЗАГРУЖЕНО</p>
-                        <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350" class="mr-3">
-                    {% endif %}
+      <div class="card-body">
+        <div class="media">
 
+          {% if photos %}
+            {% for i in photos %}
+              <img src="{{ i.photo.url }}" alt="" width="350" class="mr-3">
+            {% endfor %}
+          {% else %}
+            <p>ФОТО НЕ ЗАГРУЖЕНО</p>
+            <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350" class="mr-3">
+          {% endif %}
 
-                </div>
-            </div>
-
-            <div class="card-footer text-muted">
-                {{ item.created_at|date:"Y-m-d H:i:s" }}
-            </div>
 
         </div>
-    {% endfor %}
+      </div>
+
+      <div class="card-footer text-muted">
+        {{ item.created_at|date:"Y-m-d H:i:s" }}
+      </div>
+
+    </div>
+  {% endfor %}
 {% endblock %}

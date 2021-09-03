@@ -1,65 +1,68 @@
 {% extends 'base.html' %}
 {% block title %}
-    {{ title }}  :: {{ block.super }}
+  {{ title }}  :: {{ block.super }}
 {% endblock %}
 
 {% block content %}
 
-    <div class="card mb-3">
-        <div class="card-header">
-            Сводка по дефектам на {% now "d-m-Y H:i" %}</a>
-        </div>
-        <div class="card-header">
-            Всего: {{ defects.count }}
-            <br> С дефектом: {{ counters.defect_count }}
-            <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
-            <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
-            <br> Брак : {{ production_defect_count }}
-
-        </div>
+  <div class="card mb-3">
+    <div class="card-header">
+      Сводка по дефектам на {% now "d-m-Y H:i" %}</a>
     </div>
+    <div class="card-header">
+      Всего: {{ defects.count }}
+      <br> С дефектом: {{ counters.defect_count }}
+      <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
+      <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
+      <br> Брак : {{ production_defect_count }}
 
-    {% for item in defects %}
-        <div class="card mb-3">
-            <div class="card-header">
-                Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
-            </div>
+    </div>
+  </div>
 
-            <div class="card-header">
+  {% for item in defects %}
+    <div class="card mb-3">
+      <div class="card-header">
+        Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
+      </div>
 
-                {% if item.approved_production %}
-                    <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>
-                {% elif item.defect_eliminated %}
-                    <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
-                {% else %}
-                    <p style="background-color:#ff0000; color:#ffffff">ДЕФЕКТ</p>
-                {% endif %}
-                Дата обнаружения: {{ item.date_defect_detection }}
-                <br> Срок до: {{ item.term_up_to }}
-                <br>
+      <div class="card-header">
+        {% if item.status.pk == 4 %}
+          <p style="background-color:#990000; color:#ffffff"> БРАК </p>
+        {% elif item.status.pk == 3 %}
+          <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>
+        {% elif item.status.pk == 2 %}
+          <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
+          {% elif item.status.pk == 1 %}
+          <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>
+        {% else %}
+          <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
+        {% endif %}
+        Дата обнаружения: {{ item.date_defect_detection }}
+        <br> Срок до: {{ item.term_up_to }}
+        <br>
 
-{#                {% if item.probability_estimate * item.scale_of_consequences > 1 %}#}
-{#                    <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>#}
-{#                {% elif item.defect_eliminated %}#}
-{#                    <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>#}
-{#                {% elif item.defect_eliminated %}#}
-{#                    <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>#}
-{#                {% elif item.defect_eliminated %}#}
-{#                    <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>#}
-{#                {% endif %}#}
+        {% if item.risk_level == 'Невысокий риск' %}
+          <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
+        {% elif item.risk_level == 'Средний риск' %}
+          <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>
+        {% elif item.risk_level == 'Высокий риск' %}
+          <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>
+        {% elif item.risk_level == 'Крайне высокий риск' %}
+          <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+        {% endif %}
 
 
-                <br
-                <br> Цех: {{ item.workshop }}
-                <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
-                <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
-                {{ item.responsible_executor.first_name }} <br>
-                <br> <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
-            </div>
+        <br
+        <br> Цех: {{ item.workshop }}
+        <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
+        <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
+        {{ item.responsible_executor.first_name }} <br>
+        <br> <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
+      </div>
 
-            <div class="card-footer text-muted">
-                {{ item.created_at|date:"Y-m-d H:i:s" }}
-            </div>
-        </div>
-    {% endfor %}
+      <div class="card-footer text-muted">
+        {{ item.created_at|date:"Y-m-d H:i:s" }}
+      </div>
+    </div>
+  {% endfor %}
 {% endblock %}

@@ -20,14 +20,6 @@ class TypeOfMismatch(models.Model):
         verbose_name_plural = 'Типы несоответствий'
 
 
-class NumberOfInconsistencies(models.Model):
-    number = models.IntegerField(verbose_name='Количество несоответствий')
-
-    class Meta:
-        verbose_name = 'колличество несоответствий'
-        verbose_name_plural = 'Колличество несоответствий'
-
-
 class Details(models.Model):
     """Детали"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
@@ -180,12 +172,10 @@ class Defects(models.Model):
                                             related_name='defects_type_of_discrepancy',
                                             verbose_name='Тип несоответствия',
                                             )
-    number_of_inconsistencies = models.ForeignKey(NumberOfInconsistencies,
-                                                  on_delete=models.PROTECT,
-                                                  related_name='defects_number_inconsistencies',
-                                                  verbose_name='Колличество несоответствий',
-                                                  )
-    probability_estimate = models.ForeignKey(Status,
+    number_of_inconsistencies = models.IntegerField(default=1,
+                                                    verbose_name='Колличество несоответствий',
+                                                    )
+    probability_estimate = models.ForeignKey(ProbabilityEstimate,
                                              on_delete=models.PROTECT,
                                              related_name='defects_probability',
                                              verbose_name='Качественная оценка вероятности',
@@ -196,8 +186,9 @@ class Defects(models.Model):
                                               related_name='defects_scale',
                                               verbose_name='Масштаб последствий',
                                               )
+    risk_level = models.CharField(max_length=150, verbose_name='Уровень риска')
 
-    priority = models.ForeignKey(ScaleOfConsequences,
+    priority = models.ForeignKey(Priority,
                                  on_delete=models.PROTECT,
                                  related_name='defects_priority',
                                  verbose_name='Приоритет',
@@ -208,12 +199,15 @@ class Defects(models.Model):
     quality_controller = models.ForeignKey(User,
                                            on_delete=models.PROTECT,
                                            related_name='defects_quality_controller',
-                                           verbose_name='Контролер ОТК'
+                                           verbose_name='Контролер ОТК',
+                                           blank=True,
+                                           null=True
                                            )
     responsible_executor = models.ForeignKey(User,
                                              on_delete=models.PROTECT,
                                              related_name='defects_responsible_executor',
-                                             verbose_name='Ответственный исполнитель'
+                                             verbose_name='Ответственный исполнитель',
+                                             null=True
                                              )
 
     def get_absolute_url(self):

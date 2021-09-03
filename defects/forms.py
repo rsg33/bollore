@@ -4,74 +4,103 @@ from .models import *
 
 
 class DefectForm(forms.Form):
-    date_defect_detection = forms.DateField(widget = forms.SelectDateWidget)
-    # date_defect_detection = forms.DateField(widget=forms.DateInput(
-    #     attrs={'type': 'date',
-    #            'class': 'form-control',
-    #            'placeholder': 'Select a date'
-    #            }),
-    #     label='Дата обнаружения'
-    # )
-    # term_up_to = forms.DateTimeField(widget=forms.DateTimeInput(
-    #     attrs={'type': 'datetime-local',
-    #            'class': 'form-control',
-    #            'placeholder': 'Select a date'
-    #            }),
-    #     label='Срок до'
-    # )
-    # status = forms.ModelChoiceField(
-    #     queryset=Status.objects.all(), label='Статус дефекта', empty_label='выберите статус дефекта'
-    # )
-    #
-    # workshop = forms.ModelChoiceField(
-    #     queryset=Workshops.objects.all(), label='Цех', empty_label='выберите цех'
-    # )
-    # detail = forms.ModelChoiceField(
-    #     queryset=Details.objects.all(), label='Деталь', empty_label='выберите деталь',
-    #     required=False,
-    # )
-    # body_number = forms.ModelChoiceField(
-    #     queryset=Bodies.objects.all(), label='Номер кузова', empty_label='выберите номер кузова'
-    # )
-    # type_of_discrepancy = forms.ModelChoiceField(
-    #     queryset=TypeOfMismatch.objects.all(), label='Тип несоответствия', empty_label='выберите тип несоответствия'
-    # )
-    # number_of_inconsistencies = forms.ModelChoiceField(
-    #     queryset=NumberOfInconsistencies.objects.all(), label='Количество несоответствий',
-    #     empty_label='выберите количество несоответствий'
-    # )
-    # probability_estimate = forms.ModelChoiceField(
-    #     queryset=ProbabilityEstimate.objects.all(), label='Качественная оценка вероятности',
-    #     empty_label='оцените вероятность'
-    # )
-    # scale_of_consequences = forms.ModelChoiceField(
-    #     queryset=ScaleOfConsequences.objects.all(), label='Масштаб последствий',
-    #     empty_label='оцените маштаб последствий'
-    # )
-    # priority = forms.ModelChoiceField(
-    #     queryset=Priority.objects.all(), label='Приоритет', empty_label='оцените приоритет'
-    # )
-    # discrepancy_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}),
-    #                                           required=False,
-    #                                           label='Описание несоответствия'
-    #                                           )
-    # images = forms.FileField(widget=forms.ClearableFileInput(
-    #     attrs={'multiple': True}), label='Фото')
+    # date_defect_detection = forms.DateField(widget=forms.SelectDateWidget)
+    date_defect_detection = forms.DateField(widget=forms.DateInput(
+        attrs={'type': 'date',
+               'class': 'form-control',
+               'placeholder': 'Select a date'
+               }),
+        label='Дата обнаружения'
+    )
+    term_up_to = forms.DateTimeField(widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control',
+               'placeholder': 'Select a date'
+               }),
+        label='Срок до'
+    )
+    status = forms.ModelChoiceField(
+        queryset=Status.objects.all(),
+        label='Статус дефекта',
+        empty_label='выберите статус дефекта',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
-    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), label='Фото')
+    workshop = forms.ModelChoiceField(
+        queryset=Workshops.objects.all(),
+        label='Цех',
+        empty_label='выберите цех',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    detail = forms.ModelChoiceField(
+        queryset=Details.objects.all(),
+        label='Деталь',
+        empty_label='выберите деталь',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+    )
+    body_number = forms.ModelChoiceField(
+        queryset=Bodies.objects.all(),
+        label='Номер кузова',
+        empty_label='выберите номер кузова',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    type_of_discrepancy = forms.ModelChoiceField(
+        queryset=TypeOfMismatch.objects.all(),
+        label='Тип несоответствия',
+        empty_label='выберите тип несоответствия',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    number_of_inconsistencies = forms.IntegerField(
+        min_value=1,
+        label='Количество несоответствий',
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    probability_estimate = forms.ModelChoiceField(
+        queryset=ProbabilityEstimate.objects.all(),
+        label='Качественная оценка вероятности',
+        empty_label='оцените вероятность',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    scale_of_consequences = forms.ModelChoiceField(
+        queryset=ScaleOfConsequences.objects.all(),
+        label='Масштаб последствий',
+        empty_label='оцените маштаб последствий',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    priority = forms.ModelChoiceField(
+        queryset=Priority.objects.all(),
+        label='Приоритет',
+        empty_label='оцените приоритет',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    discrepancy_description = forms.CharField(widget=forms.Textarea(attrs={
+        'class': "form-control",
+        "rows": 5
+    }),
+        required=False,
+        label='Описание несоответствия'
+    )
 
-    # class Meta:
-    #     fields = '__all__'
-    #     widgets = {
-    #         'date_defect_detection': forms.DateInput(
-    #
-    #             attrs={'type': 'date',
-    #                    'class': 'form-control',
-    #                    'placeholder': 'Select a date'
-    #                    }),
-    #         'term_up_to': forms.DateTimeInput(format='%Y-%m-%d %H:%M:%S',
-    #                                           attrs={'type': 'datetime-local',
-    #                                                  'class': 'form-control'}),
-    #     }
+    quality_controller = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label='Контролер ОТК',
+        empty_label='Контролер',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
+    responsible_executor = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label='Ответственный исполнитель',
+        empty_label='Исполнитель',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
+    images = forms.ImageField(widget=forms.ClearableFileInput(
+        attrs={'multiple': True,
+               'class': "filestyle",
+               'data-classButton': "btn btn-primary",
+               'placeholder': "Add profile picture",
+               }),
+        required=False,
+        label='Фото')

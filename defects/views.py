@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.core.files.base import ContentFile
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
@@ -139,9 +140,65 @@ def show_body(request, body_id):
 
 def add_defect(request):
     if request.method == 'POST':
-        form = DefectForm(request.POST)
+        form = DefectForm(request.POST, request.FILES)
         if form.is_valid():
-            print(form.changed_data)
+            date_defect_detection = form.cleaned_data['date_defect_detection']
+            term_up_to = form.cleaned_data['term_up_to']
+            status = form.cleaned_data['status']
+            workshop = form.cleaned_data['workshop']
+            detail = form.cleaned_data['detail']
+            body_number = form.cleaned_data['body_number']
+            type_of_discrepancy = form.cleaned_data['type_of_discrepancy']
+            number_of_inconsistencies = form.cleaned_data['number_of_inconsistencies']
+            probability_estimate = form.cleaned_data['probability_estimate']
+            scale_of_consequences = form.cleaned_data['scale_of_consequences']
+            priority = form.cleaned_data['priority']
+            discrepancy_description = form.cleaned_data['discrepancy_description']
+            quality_controller = form.cleaned_data['quality_controller']
+            responsible_executor = form.cleaned_data['responsible_executor']
+
+            # Вычисляем уровень риска умножив оценку вероятности на маштаб последствий
+            a = ProbabilityEstimate.objects.get(description=probability_estimate).score
+            b = ScaleOfConsequences.objects.get(description=scale_of_consequences).score
+            risk_level_score = a * b
+            # где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск
+            if 1 <= risk_level_score <= 5:
+                risk_level = 'Невысокий риск'
+            elif 6 <= risk_level_score <= 10:
+                risk_level = 'Средний риск'
+            elif 12 <= risk_level_score <= 15:
+                risk_level = 'Высокий риск'
+            elif 16 <= risk_level_score <= 25:
+                risk_level = 'Крайне высокий риск'
+            else:
+                risk_level = 'Ошибка в программе'
+
+            # Записываем полученные данные из формы в таблицу Defects
+            defect = Defects.objects.create(
+                date_defect_detection=date_defect_detection,
+                term_up_to=term_up_to,
+                status=status,
+                workshop=workshop,
+                detail=detail,
+                body_number=body_number,
+                type_of_discrepancy=type_of_discrepancy,
+                number_of_inconsistencies=number_of_inconsistencies,
+                probability_estimate=probability_estimate,
+                scale_of_consequences=scale_of_consequences,
+                priority=priority,
+                discrepancy_description=discrepancy_description,
+                quality_controller=quality_controller,
+                responsible_executor=responsible_executor,
+                risk_level=risk_level
+            )
+            # print(type(probability_estimate))
+            # Загружаем изображения и прописываем их в таблице PhotoDefects
+            for f in request.FILES.getlist('images'):
+                data = f.read()  # Если файл целиком умещается в памяти
+                photo = PhotoDefects(defect=defect)
+                photo.photo.save(f.name, ContentFile(data))
+                photo.save()
+            # return redirect('home')
     else:
         form = DefectForm()
     return render(request, 'defects/add_defect.html', {'form': form})

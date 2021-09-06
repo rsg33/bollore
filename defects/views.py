@@ -61,6 +61,11 @@ def show_workshops(request, shop_id):
     #                 workshop_id=shop_id).filter(defect_eliminated=True,
     #                                             approved_production=False).count(),
     #             }
+    counters = {'defect_count': Defects.objects.filter(status=1, workshop_id=shop_id).count(),
+                'defect_eliminated_count': Defects.objects.filter(status=2, workshop_id=shop_id).count(),
+                'defect_approved_count': Defects.objects.filter(status=3, workshop_id=shop_id).count(),
+                'production_defect_count': Defects.objects.filter(status=4, workshop_id=shop_id).count(),
+                }
     if len(defects) == 0:
         raise Http404
     context = {
@@ -79,14 +84,14 @@ def show_disagreement(request, disagreement_id):
     defects = Defects.objects.filter(type_of_discrepancy_id=disagreement_id)
     shops = Workshops.objects.all()
     disagreement = TypeOfMismatch.objects.all()
-    counters = {'defect_count': Defects.objects.filter(type_of_discrepancy_id=disagreement_id).filter(
-        defect_eliminated=False).count(),
-                'defect_approved_count': Defects.objects.filter(type_of_discrepancy_id=disagreement_id).filter(
-                    approved_production=True
-                ).count(),
+    counters = {'defect_count': Defects.objects.filter(
+        status=1, type_of_discrepancy_id=disagreement_id).count(),
                 'defect_eliminated_count': Defects.objects.filter(
-                    type_of_discrepancy_id=disagreement_id).filter(defect_eliminated=True,
-                                                                   approved_production=False).count(),
+                    status=2, type_of_discrepancy_id=disagreement_id).count(),
+                'defect_approved_count': Defects.objects.filter(
+                    status=3, type_of_discrepancy_id=disagreement_id).count(),
+                'production_defect_count': Defects.objects.filter(
+                    status=4, type_of_discrepancy_id=disagreement_id).count(),
                 }
     if len(defects) == 0:
         raise Http404
@@ -119,12 +124,10 @@ def show_body(request, body_id):
     """Показать все дефекты по выбранному кузову"""
     defects = Defects.objects.filter(body_number_id=body_id)
     shops = Workshops.objects.all()
-    counters = {'defect_count': Defects.objects.filter(body_number_id=body_id).filter(defect_eliminated=False).count(),
-                'defect_approved_count': Defects.objects.filter(body_number_id=body_id).filter(approved_production=True
-                                                                                               ).count(),
-                'defect_eliminated_count': Defects.objects.filter(
-                    body_number_id=body_id).filter(defect_eliminated=True,
-                                                   approved_production=False).count(),
+    counters = {'defect_count': Defects.objects.filter(status=1, body_number_id=body_id).count(),
+                'defect_eliminated_count': Defects.objects.filter(status=2, body_number_id=body_id).count(),
+                'defect_approved_count': Defects.objects.filter(status=3, body_number_id=body_id).count(),
+                'production_defect_count': Defects.objects.filter(status=4, body_number_id=body_id).count(),
                 }
 
     if len(defects) == 0:

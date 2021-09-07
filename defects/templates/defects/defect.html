@@ -1,3 +1,28 @@
+<!-- Блок стилей для открытия фоток в модальном окне-->
+<style type="text/css">
+      img[tabindex="0"] {
+      cursor: zoom-in;
+      }
+      img[tabindex="0"]:focus {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: auto;
+      height: auto;
+      max-width: 93%;
+      max-height: 93%;
+      margin: auto;
+      box-shadow: 0 0 20px #000, 0 0 0 1000px rgba(59,59,59,.4);
+      }
+      img[tabindex="0"]:focus,
+      img[tabindex="0"]:focus ~ * {
+      pointer-events: none;
+      }
+</style>
+
 {% extends 'base.html' %}
 {% block title %}
   {{ title }}  :: {{ block.super }}
@@ -39,26 +64,49 @@
         {{ item.responsible_executor.first_name }} <br>
       </div>
 
-      <div class="card-body">
-        <div class="media">
 
-          {% if photos %}
-            {% for i in photos %}
-              <img src="{{ i.photo.url }}" alt="" width="350" class="mr-3">
-            {% endfor %}
-          {% else %}
-            <p>ФОТО НЕ ЗАГРУЖЕНО</p>
-            <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350" class="mr-3">
-          {% endif %}
+
+      <div class="row">
+        <div class="card-body">
+          <div class="media">
+
+            {% if photos %}
+              {% for i in photos %}
+
+
+                <div class="col-sm-6 col-md-4 col-lg-3 ">
+
+                    <img src="{{ i.photo.url }}" alt="" width="350" class="img-fluid img-thumbnail" tabindex="0">
+
+                </div>
+
+
+
+
+
+              {% endfor %}
+              </div>
+
+
+
+            {% else %}
+              <p>ФОТО НЕ ЗАГРУЖЕНО</p>
+              <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350"
+                   class="mr-3">
+            {% endif %}
 
 
         </div>
       </div>
 
+
       <div class="card-footer text-muted">
         {{ item.created_at|date:"Y-m-d H:i:s" }}
       </div>
 
-    </div>
+{#    </div>#}
   {% endfor %}
+
+
+
 {% endblock %}

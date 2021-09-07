@@ -56,18 +56,18 @@ class DefectForm(forms.Form):
         label='Количество несоответствий',
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
-    probability_estimate = forms.ModelChoiceField(
-        queryset=ProbabilityEstimate.objects.all(),
-        label='Качественная оценка вероятности',
-        empty_label='оцените вероятность',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-    scale_of_consequences = forms.ModelChoiceField(
-        queryset=ScaleOfConsequences.objects.all(),
-        label='Масштаб последствий',
-        empty_label='оцените маштаб последствий',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
+    # probability_estimate = forms.ModelChoiceField(
+    #     queryset=ProbabilityEstimate.objects.all(),
+    #     label='Качественная оценка вероятности',
+    #     empty_label='оцените вероятность',
+    #     widget=forms.Select(attrs={'class': 'form-control'})
+    # )
+    # scale_of_consequences = forms.ModelChoiceField(
+    #     queryset=ScaleOfConsequences.objects.all(),
+    #     label='Масштаб последствий',
+    #     empty_label='оцените маштаб последствий',
+    #     widget=forms.Select(attrs={'class': 'form-control'})
+    # )
     priority = forms.ModelChoiceField(
         queryset=Priority.objects.all(),
         label='Приоритет',

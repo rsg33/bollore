@@ -153,16 +153,19 @@ def add_defect(request):
             body_number = form.cleaned_data['body_number']
             type_of_discrepancy = form.cleaned_data['type_of_discrepancy']
             number_of_inconsistencies = form.cleaned_data['number_of_inconsistencies']
-            probability_estimate = form.cleaned_data['probability_estimate']
-            scale_of_consequences = form.cleaned_data['scale_of_consequences']
+            # probability_estimate = form.cleaned_data['probability_estimate']
+            # scale_of_consequences = form.cleaned_data['scale_of_consequences']
             priority = form.cleaned_data['priority']
             discrepancy_description = form.cleaned_data['discrepancy_description']
             quality_controller = form.cleaned_data['quality_controller']
             responsible_executor = form.cleaned_data['responsible_executor']
 
             # Вычисляем уровень риска умножив оценку вероятности на маштаб последствий
-            a = ProbabilityEstimate.objects.get(description=probability_estimate).score
-            b = ScaleOfConsequences.objects.get(description=scale_of_consequences).score
+            # Нужно брать объект типа несоответствия TypeOfMismatch, где он равен type_of_discrepancy
+            # и через поля probability_estimate и scale_consequences
+            # вычислять значения score, потом их перемножить и записать результат в уровень риска дефекта.
+            a = TypeOfMismatch.objects.get(mismatch=type_of_discrepancy).probability_estimate.score
+            b = TypeOfMismatch.objects.get(mismatch=type_of_discrepancy).scale_consequences.score
             risk_level_score = a * b
             # где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск
             if 1 <= risk_level_score <= 5:
@@ -186,12 +189,13 @@ def add_defect(request):
                 body_number=body_number,
                 type_of_discrepancy=type_of_discrepancy,
                 number_of_inconsistencies=number_of_inconsistencies,
-                probability_estimate=probability_estimate,
-                scale_of_consequences=scale_of_consequences,
+                # probability_estimate=probability_estimate,
+                # scale_of_consequences=scale_of_consequences,
                 priority=priority,
                 discrepancy_description=discrepancy_description,
                 quality_controller=quality_controller,
                 responsible_executor=responsible_executor,
+                # risk_level='Крайне высокий риск'
                 risk_level=risk_level
             )
             # print(type(probability_estimate))

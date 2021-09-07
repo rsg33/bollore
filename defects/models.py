@@ -185,18 +185,6 @@ class Defects(models.Model):
     number_of_inconsistencies = models.IntegerField(default=1,
                                                     verbose_name='Колличество несоответствий',
                                                     )
-    # probability_estimate = models.ForeignKey(ProbabilityEstimate,
-    #                                          on_delete=models.PROTECT,
-    #                                          related_name='defects_probability',
-    #                                          verbose_name='Качественная оценка вероятности',
-    #                                          )
-    #
-    # scale_of_consequences = models.ForeignKey(ScaleOfConsequences,
-    #                                           on_delete=models.PROTECT,
-    #                                           related_name='defects_scale',
-    #                                           verbose_name='Масштаб последствий',
-    #                                           )
-    risk_level = models.CharField(max_length=150, verbose_name='Уровень риска')
 
     priority = models.ForeignKey(Priority,
                                  on_delete=models.PROTECT,

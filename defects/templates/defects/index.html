@@ -26,20 +26,21 @@
         Дата обнаружения: {{ item.date_defect_detection }}
         <br> Срок до: {{ item.term_up_to }}
         <br>
-
-        {% if item.risk_level == 'Невысокий риск' %}
+       <!-- Вычисляем уровень риска умножив оценку вероятности на маштаб последствий,
+       где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->
+        {% if 1 <= item.risk_level and item.risk_level <= 5 %}
           <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
-        {% elif item.risk_level == 'Средний риск' %}
+        {% elif 6 <= item.risk_level and item.risk_level <= 10 %}
           <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>
-        {% elif item.risk_level == 'Высокий риск' %}
+        {% elif 12 <= item.risk_level and item.risk_level <= 15 %}
           <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>
-        {% elif item.risk_level == 'Крайне высокий риск' %}
+        {% elif 16 <= item.risk_level and item.risk_level <= 25 %}
           <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+        {% else %}
+          <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>
         {% endif %}
 
-
-        <br
-        <br> Цех: {{ item.workshop }}
+        Цех: {{ item.workshop }}
         <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
         <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
         {{ item.responsible_executor.first_name }} <br>

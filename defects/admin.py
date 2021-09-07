@@ -71,7 +71,6 @@ class DefectsAdmin(admin.ModelAdmin):
                     'quality_controller',
                     'responsible_executor',
                     'created_at',
-                    'risk_level',
                     )
     list_display_links = ('date_defect_detection',)
     search_fields = ('body_number__body_number', 'workshop__name_workshop',)

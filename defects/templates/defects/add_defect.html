@@ -1,115 +1,30 @@
 {% extends 'base.html' %}
+
+{#<link rel="stylesheet" href="{% static "defects/css/select2.min.css" %}"/>#}
+{##}
+{#<script src={% static "defects/js/select2.min.js" %}></script>#}
+{#<script src={% static "defects/js/jquery-3.6.0.min.js" %}></script>#}
+
 {% block title %}
   {{ title }}
 {% endblock %}
 
 {% block content %}
+
   <h1 xmlns="http://www.w3.org/1999/html">Новый дефект</h1>
   <form id="post_form" method="post" action="{% url 'add_defect' %}" enctype="multipart/form-data">
     {% csrf_token %}
-
     {{ form.as_p }}
-
-    {#    {{ form.non_field_errors }}#}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.date_defect_detection.id_for_label }}" class="form-label">Дата обнаружения:</label>#}
-    {#      {{ form.date_defect_detection }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.date_defect_detection.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.term_up_to.id_for_label }}" class="form-label">Срок до:</label>#}
-    {#      {{ form.term_up_to }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.term_up_to.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.status.id_for_label }}" class="form-label">Статус дефекта:</label>#}
-    {#      {{ form.status }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.status.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.workshop.id_for_label }}" class="form-label">Цех:</label>#}
-    {#      {{ form.workshop }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.workshop.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.detail.id_for_label }}" class="form-label">Деталь:</label>#}
-    {#      {{ form.detail }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.detail.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.body_number.id_for_label }}" class="form-label">Номер кузова:</label>#}
-    {#      {{ form.body_number }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.body_number.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.type_of_discrepancy.id_for_label }}" class="form-label">Тип несоответствия:</label>#}
-    {#      {{ form.type_of_discrepancy }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.type_of_discrepancy.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.number_of_inconsistencies.id_for_label }}" class="form-label">Количество#}
-    {#        несоответствий:</label>#}
-    {#      {{ form.number_of_inconsistencies }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.number_of_inconsistencies.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.probability_estimate.id_for_label }}" class="form-label">Качественная оценка#}
-    {#        вероятности:</label>#}
-    {#      {{ form.probability_estimate }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.probability_estimate.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.scale_of_consequences.id_for_label }}" class="form-label">Масштаб последствий:</label>#}
-    {#      {{ form.scale_of_consequences }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.scale_of_consequences.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.priority.id_for_label }}" class="form-label">Приоритет:</label>#}
-    {#      {{ form.priority }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.priority.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-    {##}
-    {#    <div class="mb-3">#}
-    {#      <label for="{{ form.discrepancy_description.id_for_label }}" class="form-label">Описание несоответствия:</label>#}
-    {#      {{ form.discrepancy_description }}#}
-    {#      <div class="invalid-feedback">#}
-    {#        {{ form.discrepancy_description.errors }}#}
-    {#      </div>#}
-    {#    </div>#}
-
     <button type="submit" class="btn btn-primary btn-block">Добавить дефект</button>
   </form>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_detail').select2();
+    });
+</script>
 {% endblock %}

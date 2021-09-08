@@ -6,9 +6,7 @@ from .forms import *
 
 
 def calc_risk(defects):
-    """
-    Калькулятор рисков
-    """
+    """Калькулятор рисков"""
     defects_mod = []  # пустой список для модифицированного списка объектов
     for item in defects:
         a = item.type_of_discrepancy.probability_estimate.score

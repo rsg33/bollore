@@ -61,7 +61,8 @@ class DefectForm(forms.Form):
         queryset=Priority.objects.all(),
         label='Приоритет',
         empty_label='оцените приоритет',
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
     )
     discrepancy_description = forms.CharField(widget=forms.Textarea(attrs={
         'class': "form-control",

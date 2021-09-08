@@ -36,25 +36,34 @@
       </div>
 
       <div class="card-header">
-        {% if item.defect_eliminated %}
+        {% if item.status.pk == 4 %}
+          <p style="background-color:#990000; color:#ffffff"> БРАК </p>
+        {% elif item.status.pk == 3 %}
+          <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>
+        {% elif item.status.pk == 2 %}
           <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
+          {% elif item.status.pk == 1 %}
+          <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>
         {% else %}
-          <p style="background-color:#ff0000; color:#ffffff">ДЕФЕКТ</p>
+          <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
         {% endif %}
         Дата обнаружения: {{ item.date_defect_detection }}
         <br> Срок до: {{ item.term_up_to }}
         <br>
-
-        {% if item.risk_level == 'Невысокий риск' %}
-          <p style="background-color:#ffa500; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
-        {% elif item.risk_level == 'Средний риск' %}
-          <p style="background-color:#00cc00; color:#ffffff"> СРЕДНИЙ РИСК </p>
-        {% elif item.risk_level == 'Высокий риск' %}
-          <p style="background-color:#00cc00; color:#ffffff"> ВЫСОКИЙ РИСК </p>
-        {% elif item.risk_level == 'Крайне высокий риск' %}
-          <p style="background-color:#00cc00; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+       <!-- Вычисляем уровень риска умножив оценку вероятности на маштаб последствий,
+       где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->
+        {% if 1 <= item.risk_level and item.risk_level <= 5 %}
+          <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
+        {% elif 6 <= item.risk_level and item.risk_level <= 10 %}
+          <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>
+        {% elif 12 <= item.risk_level and item.risk_level <= 15 %}
+          <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>
+        {% elif 16 <= item.risk_level and item.risk_level <= 25 %}
+          <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+        {% else %}
+          <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>
         {% endif %}
-        <br> Цех: {{ item.workshop }}
+        Цех: {{ item.workshop }}
         <br> Деталь: {{ item.detail }}
         <br> Количество несоответствий: {{ item.number_of_inconsistencies }}
         <br> Тип несоответствия: {{ item.type_of_discrepancy }}

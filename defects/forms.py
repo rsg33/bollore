@@ -53,6 +53,7 @@ class DefectForm(forms.Form):
     )
     number_of_inconsistencies = forms.IntegerField(
         min_value=1,
+        initial=1,
         label='Количество несоответствий',
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )

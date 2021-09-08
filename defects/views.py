@@ -1,6 +1,7 @@
 from django.core.files.base import ContentFile
 from django.http import HttpResponseNotFound, Http404
 from django.shortcuts import render
+from django.db.models import F
 
 from .forms import *
 
@@ -11,11 +12,6 @@ def index(request):
     shops = Workshops.objects.all()
     disagreement = TypeOfMismatch.objects.all()
     bodies = Bodies.objects.all()
-    counters = {'defect_count': Defects.objects.filter(status=1).count(),
-                'defect_eliminated_count': Defects.objects.filter(status=2).count(),
-                'defect_approved_count': Defects.objects.filter(status=3).count(),
-                'production_defect_count': Defects.objects.filter(status=4).count(),
-                }
     defects_mod = []  # пустой список для модифицированного списка объектов
     for item in defects:
         a = item.type_of_discrepancy.probability_estimate.score
@@ -23,7 +19,14 @@ def index(request):
         risk_level = a * b  # Вычисляем уровень риска умножив оценку вероятности на маштаб последствий.
         item.risk_level = risk_level
         defects_mod.append(item)  # модифицируем объект добавляя новый атрибут риска
-    print(defects_mod)
+
+    counters = {
+        'all_defects': len(defects_mod),  # Все дефекты
+        'defect_count': Defects.objects.filter(status=1).count(),  # С дефектом
+        'defect_eliminated_count': Defects.objects.filter(status=2).count(),  # Дефект устранен
+        'defect_approved_count': Defects.objects.filter(status=3).count(),  # Допущен с дефектом
+        'production_defect_count': Defects.objects.filter(status=4).count(),  # Брак
+    }
 
     context = {
         'defects': defects_mod,
@@ -40,17 +43,27 @@ def index(request):
 def show_defect(request, defect_id):
     """Показать выбранный дефект с подробностями"""
     defects = Defects.objects.filter(pk=defect_id)
-    photos = PhotoDefects.objects.filter(defect_id=defect_id)
     shops = Workshops.objects.all()
+    disagreement = TypeOfMismatch.objects.all()
     bodies = Bodies.objects.all()
-    # print(photos)
+    photos = PhotoDefects.objects.filter(defect_id=defect_id)
+
+    defects_mod = []  # пустой список для модифицированного списка объектов
+    for item in defects:
+        a = item.type_of_discrepancy.probability_estimate.score
+        b = item.type_of_discrepancy.scale_consequences.score
+        risk_level = a * b  # Вычисляем уровень риска умножив оценку вероятности на маштаб последствий.
+        item.risk_level = risk_level
+        defects_mod.append(item)  # модифицируем объект добавляя новый атрибут риска
+
     context = {
         'defects': defects,
-        'photos': photos,
         'shops': shops,
+        'disagreement': disagreement,
         'bodies': bodies,
         'title': 'Список дефектов',
         'workshop_selected': 0,
+        'photos': photos,
     }
     return render(request, 'defects/defect.html', context)
 

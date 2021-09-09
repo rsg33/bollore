@@ -33,10 +33,10 @@ class TypeOfMismatch(models.Model):
 class Details(models.Model):
     """Детали"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
-    article = models.CharField(max_length=150, unique=True, verbose_name='Артикул')
+    article = models.CharField(max_length=150, unique=True, verbose_name='Артикул', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return '%s %s' % (self.name, self.article)
 
     class Meta:
         verbose_name = 'деталь'
@@ -170,7 +170,8 @@ class Defects(models.Model):
                                on_delete=models.PROTECT,
                                related_name='defects_detail',
                                verbose_name='Деталь',
-                               blank=True
+                               blank=True,
+                               null=True
                                )
     body_number = models.ForeignKey(Bodies,
                                     on_delete=models.PROTECT,

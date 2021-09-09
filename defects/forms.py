@@ -62,6 +62,7 @@ class DefectForm(forms.Form):
         label='Приоритет',
         empty_label='оцените приоритет',
         widget=forms.Select(attrs={'class': 'form-control'}),
+        initial=2,
         required=False,
     )
     discrepancy_description = forms.CharField(widget=forms.Textarea(attrs={
@@ -88,7 +89,7 @@ class DefectForm(forms.Form):
 
     images = forms.ImageField(widget=forms.ClearableFileInput(
         attrs={'multiple': True,
-               'class': "filestyle",
+               'class': 'filestyle',
                'data-classButton': "btn btn-primary",
                'placeholder': "Add profile picture",
                }),

@@ -32,11 +32,12 @@ class TypeOfMismatch(models.Model):
 
 class Details(models.Model):
     """Детали"""
-    name = models.CharField(max_length=150, verbose_name='Наименование')
     article = models.CharField(max_length=150, unique=True, verbose_name='Артикул', blank=True, null=True)
+    name = models.CharField(max_length=150, verbose_name='Наименование')
+
 
     def __str__(self):
-        return '%s %s' % (self.name, self.article)
+        return '%s %s %s' % (self.name, '-', self.article)
 
     class Meta:
         verbose_name = 'деталь'

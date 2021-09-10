@@ -191,7 +191,6 @@ def add_defect(request):
                 discrepancy_description=discrepancy_description,
                 quality_controller=quality_controller,
                 responsible_executor=responsible_executor,
-                # risk_level=risk_level
             )
             # Загружаем изображения и прописываем их в таблице PhotoDefects
             for f in request.FILES.getlist('images'):
@@ -205,5 +204,5 @@ def add_defect(request):
     return render(request, 'defects/add_defect.html', {'form': form})
 
 
-def pageNotFound(request, exception):
+def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')

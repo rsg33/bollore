@@ -84,7 +84,7 @@ class ProbabilityEstimate(models.Model):
     description = models.CharField(max_length=150, verbose_name='Оценка')
 
     def __str__(self):
-        return self.description
+        return '%s %s %s' % (self.description, '-', self.score)
 
     class Meta:
         verbose_name = 'оценка вероятности'
@@ -104,7 +104,7 @@ class ScaleOfConsequences(models.Model):
     description = models.CharField(max_length=150, verbose_name='Оценка')
 
     def __str__(self):
-        return self.description
+        return '%s %s %s' % (self.description, '-', self.score)
 
     class Meta:
         verbose_name = 'масштаб последствий'

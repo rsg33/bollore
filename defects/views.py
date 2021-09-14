@@ -175,7 +175,6 @@ def add_defect(request):
             priority = form.cleaned_data['priority']
             discrepancy_description = form.cleaned_data['discrepancy_description']
             quality_controller = form.cleaned_data['quality_controller']
-            responsible_executor = form.cleaned_data['responsible_executor']
 
             # Записываем полученные данные из формы в таблицу Defects
             defect = Defects.objects.create(
@@ -190,7 +189,7 @@ def add_defect(request):
                 priority=priority,
                 discrepancy_description=discrepancy_description,
                 quality_controller=quality_controller,
-                responsible_executor=responsible_executor,
+                responsible_executor=workshop.responsible_executor,
             )
             # Загружаем изображения и прописываем их в таблице PhotoDefects
             for f in request.FILES.getlist('images'):
@@ -198,6 +197,7 @@ def add_defect(request):
                 photo = PhotoDefects(defect=defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
+
             # return redirect('home')
     else:
         form = DefectForm()

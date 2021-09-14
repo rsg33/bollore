@@ -80,13 +80,6 @@ class DefectForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    responsible_executor = forms.ModelChoiceField(
-        queryset=User.objects.all(),
-        label='Ответственный исполнитель',
-        empty_label='Исполнитель',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-
     images = forms.ImageField(widget=forms.ClearableFileInput(
         attrs={'multiple': True,
                'class': 'filestyle',

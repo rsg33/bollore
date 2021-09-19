@@ -15,7 +15,8 @@
 {#    </div>#}
 {#</nav>#}
 
-
+{% load defects_nav_tag %}
+{% nav_objects as nav_obj %}
 <ul class="nav nav-tabs justify-content-center">
 
     <li class="nav-item">
@@ -30,8 +31,8 @@
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Дефекты
             в цехах</a>
         <ul class="dropdown-menu">
-            {% for s in shops %}
-                {% if s.pk == workshop_selected %}
+            {% for s in nav_obj.shops %}
+                {% if s.pk == nav_obj.workshop_selected %}
                     <li><a class="dropdown-item">{{ s.name_workshop }}</a></li>
                 {% else %}
                     <li><a class="dropdown-item" href="{{ s.get_absolute_url }}">{{ s.name_workshop }}</a></li>
@@ -48,8 +49,8 @@
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Дефекты
             по несоответствию</a>
         <ul class="dropdown-menu">
-            {% for s in disagreement %}
-                {% if s.pk == workshop_selected %}
+            {% for s in nav_obj.disagreement %}
+                {% if s.pk == nav_obj.workshop_selected %}
                     <li><a class="dropdown-item">{{ s.mismatch }}</a></li>
                 {% else %}
                     <li><a class="dropdown-item" href="{{ s.get_absolute_url }}">{{ s.mismatch }}</a></li>

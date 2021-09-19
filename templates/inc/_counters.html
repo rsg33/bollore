@@ -1,10 +1,9 @@
   <div class="card mb-3">
     <div class="card-header">
-      Сводка по дефектам на {% now "d-m-Y H:i" %}</a>
+      Сводка по дефектам на {% now "d-m-Y H:i" %}
     </div>
     <div class="card-header">
- 
-      Всего: {{ counters.all_defects }}
+      Всего: {{ object_list.count }}
       <br> С дефектом: {{ counters.defect_count }}
       <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
       <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}

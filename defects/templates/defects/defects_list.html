@@ -5,52 +5,50 @@
 
 {% block content %}
   {% include 'inc/_counters.html' %}
-  <!-- Распаковываем zip с объектами модели и расчетами рисков для каждой модели -->
-  {% for defect, risk_ball in context_mod_zip  %}
-{#  {% for item in defects %}#}
+  {% for item in object_list %}
     <div class="card mb-3">
       <div class="card-header">
-        Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+        Номер кузова: <a href="{{ item.body_number.get_absolute_url }}">{{ item.body_number }}</a>
       </div>
 
       <div class="card-header">
-        {% if defect.status.pk == 4 %}
+        {% if item.status.pk == 4 %}
           <p style="background-color:#990000; color:#ffffff"> БРАК </p>
-        {% elif defect.status.pk == 3 %}
+        {% elif item.status.pk == 3 %}
           <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>
-        {% elif defect.status.pk == 2 %}
+        {% elif item.status.pk == 2 %}
           <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
-        {% elif defect.status.pk == 1 %}
+        {% elif item.status.pk == 1 %}
           <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>
         {% else %}
           <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
         {% endif %}
         Дата обнаружения: {{ item.date_defect_detection }}
-        <br> Срок до: {{ defect.term_up_to }}
+        <br> Срок до: {{ item.term_up_to }}
         <br>
-        <!-- Вычисляем уровень риска умножив оценку вероятности на масштаб последствий,
+        <!-- Вычисляем уровень риска умножив оценку вероятности на маштаб последствий,
         где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->
-        {% if 1 <= risk_ball and risk_ball <= 5 %}
+        {% if 1 <= item.risk_level and item.risk_level <= 5 %}
           <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
-        {% elif 6 <= risk_ball and risk_ball <= 10 %}
+        {% elif 6 <= item.risk_level and item.risk_level <= 10 %}
           <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>
-        {% elif 12 <= risk_ball and risk_ball <= 15 %}
+        {% elif 12 <= item.risk_level and item.risk_level <= 15 %}
           <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>
-        {% elif 16 <= risk_ball and risk_ball <= 25 %}
+        {% elif 16 <= item.risk_level and item.risk_level <= 25 %}
           <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
         {% else %}
           <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>
         {% endif %}
 
-        Цех: {{ defect.workshop }}
-        <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
-        <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
-        {{ defect.responsible_executor.first_name }} <br>
-        <br> <a href="{{ defect.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
+        Цех: {{ item.workshop }}
+        <br> Контролер ОТК: {{ item.quality_controller.last_name }} {{ item.quality_controller.first_name }}
+        <br> Ответственный исполнитель: {{ item.responsible_executor.last_name }}
+        {{ item.responsible_executor.first_name }} <br>
+        <br> <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>
       </div>
 
       <div class="card-footer text-muted">
-        {{ defect.created_at|date:"Y-m-d H:i:s" }}
+        {{ item.created_at|date:"Y-m-d H:i:s" }}
       </div>
     </div>
   {% endfor %}

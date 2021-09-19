@@ -210,7 +210,7 @@ class Defects(models.Model):
                                              )
 
     def get_absolute_url(self):
-        return reverse('defect', kwargs={'defect_id': self.pk})
+        return reverse('defect', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.body_number.body_number

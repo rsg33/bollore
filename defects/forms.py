@@ -73,13 +73,6 @@ class DefectForm(forms.Form):
         label='Описание несоответствия'
     )
 
-    quality_controller = forms.ModelChoiceField(
-        queryset=User.objects.all(),
-        label='Контролер ОТК',
-        empty_label='Контролер',
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-
     images = forms.ImageField(widget=forms.ClearableFileInput(
         attrs={'multiple': True,
                'class': 'filestyle',

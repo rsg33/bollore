@@ -1,0 +1,103 @@
+<!-- Блок стилей для открытия фоток в модальном окне-->
+<style type="text/css">
+    img[tabindex="0"] {
+        cursor: zoom-in;
+    }
+
+    img[tabindex="0"]:focus {
+        position: fixed;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: auto;
+        height: auto;
+        max-width: 93%;
+        max-height: 93%;
+        margin: auto;
+        box-shadow: 0 0 20px #000, 0 0 0 1000px rgba(59, 59, 59, .4);
+    }
+
+    img[tabindex="0"]:focus,
+    img[tabindex="0"]:focus ~ * {
+        pointer-events: none;
+    }
+</style>
+
+{% extends 'base.html' %}
+{% block title %}
+  {{ title }}  :: {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  <div class="card mb-3">
+    <div class="card-header">
+      Номер кузова: <a href="{{ object.body_number.get_absolute_url }}">{{ object.body_number }}</a>
+    </div>
+
+    <div class="card-header">
+      {% if object.status.pk == 4 %}
+        <p style="background-color:#990000; color:#ffffff"> БРАК </p>
+      {% elif object.status.pk == 3 %}
+        <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>
+      {% elif object.status.pk == 2 %}
+        <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>
+      {% elif object.status.pk == 1 %}
+        <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>
+      {% else %}
+        <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
+      {% endif %}
+      Дата обнаружения: {{ object.date_defect_detection }}
+      <br> Срок до: {{ object.term_up_to }}
+      <br>
+      <!-- Вычисляем уровень риска умножив оценку вероятности на маштаб последствий,
+      где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->
+      {% if 1 <= risk_level and risk_level <= 5 %}
+        <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
+      {% elif 6 <= risk_level and risk_level <= 10 %}
+        <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>
+      {% elif 12 <= risk_level and risk_level <= 15 %}
+        <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>
+      {% elif 16 <= risk_level and risk_level <= 25 %}
+        <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>
+      {% else %}
+        <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>
+      {% endif %}
+      Цех: {{ object.workshop }}
+      {% if object.detail is None %}
+        <br> Деталь: Не указана
+      {% else %}
+        <br> Деталь: {{ object.detail }}
+      {% endif %}
+      <br> Количество несоответствий: {{ object.number_of_inconsistencies }}
+      <br> Тип несоответствия: {{ object.type_of_discrepancy }}
+      <br> Описание несоответствия: {{ object.discrepancy_description }}
+      <br> Контролер ОТК: {{ object.quality_controller.last_name }} {{ object.quality_controller.first_name }}
+      <br> Ответственный исполнитель: {{ object.responsible_executor.last_name }}
+      {{ object.responsible_executor.first_name }} <br>
+    </div>
+
+       <div class="row">
+    <div class="card-body">
+      <div class="media">
+        {% if photos %}
+          {% for i in photos %}
+              <img src="{{ i.photo.url }}" alt="" width="350" class="img-fluid img-thumbnail" tabindex="0">
+          {% endfor %}
+        {% else %}
+          <p>ФОТО НЕ ЗАГРУЖЕНО</p>
+          <div class="col-sm-6 col-md-4 col-lg-3 ">
+            <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350"
+                 class="img-fluid img-thumbnail" tabindex="0">
+          </div>
+        {% endif %}
+</div>
+    </div>
+        </div>
+
+    <div class="card-footer text-muted">
+      {{ object.created_at|date:"Y-m-d H:i:s" }}
+    </div>
+  </div>
+{% endblock %}

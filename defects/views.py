@@ -1,5 +1,5 @@
 from django.core.files.base import ContentFile
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
 from .forms import *
@@ -19,8 +19,6 @@ class HomeDefects(MyMixin, ListView):
         """Функция которая наследует атрибуты от класса и добавляет доп. атрибуты в контекст"""
         context = super(HomeDefects, self).get_context_data(**kwargs)
         context['title'] = 'Дефекты'  # Объявляем заголовок
-        context['context_mod_zip'] = self.calc_risk(self.object_list)  # Распакуем при выводе объектов через цикл for
-        # метод calc_risk из MyMixin
         return context
 
     def get_queryset(self):
@@ -51,8 +49,6 @@ class DefectsByWorkshops(MyMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(DefectsByWorkshops, self).get_context_data(**kwargs)
         context['title'] = Workshops.objects.get(pk=self.kwargs['shop_id'])  # Объявляем заголовок
-        context['context_mod_zip'] = self.calc_risk(self.object_list)  # Распакуем при выводе объектов через цикл for
-        # метод calc_risk из MyMixin
         return context
 
     def get_queryset(self):
@@ -66,8 +62,6 @@ class DefectsByDisagreement(MyMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(DefectsByDisagreement, self).get_context_data(**kwargs)
         context['title'] = TypeOfMismatch.objects.get(pk=self.kwargs['disagreement_id'])  # Объявляем заголовок
-        context['context_mod_zip'] = self.calc_risk(self.object_list)  # Распакуем при выводе объектов через цикл for
-        # метод calc_risk из MyMixin
         return context
 
     def get_queryset(self):
@@ -81,8 +75,6 @@ class DefectsByBody(MyMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(DefectsByBody, self).get_context_data(**kwargs)
         context['title'] = f"Кузов {Bodies.objects.get(pk=self.kwargs['body_id'])}"  # Объявляем заголовок
-        context['context_mod_zip'] = self.calc_risk(self.object_list)  # Распакуем при выводе объектов через цикл for
-        # метод calc_risk из MyMixin
         return context
 
     def get_queryset(self):
@@ -136,11 +128,10 @@ def add_defect(request):
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
 
-            # return redirect('home')
+            return redirect('home')
     else:
         form = DefectForm()
     return render(request, 'defects/add_defect.html', {'form': form})
-
 
 # def page_not_found(request, exception):
 #     return HttpResponseNotFound('<h1>Страница не найдена</h1>')

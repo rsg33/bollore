@@ -62,6 +62,7 @@ class DefectsAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'date_defect_detection',
                     'term_up_to',
+                    'status',
                     'workshop',
                     'detail',
                     'body_number',

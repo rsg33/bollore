@@ -6,8 +6,8 @@
 {% block content %}
   {% include 'inc/_counters.html' %}
   <!-- Распаковываем zip с объектами модели и расчетами рисков для каждой модели -->
-  {% for defect, risk_ball in context_mod_zip  %}
-{#  {% for item in defects %}#}
+{#  {% for defect, risk_ball in context_mod_zip  %}#}
+  {% for defect in object_list %}
     <div class="card mb-3">
       <div class="card-header">
         Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>

@@ -6,6 +6,7 @@ class MyMixin(object):
     model = Defects
     template_name = 'defects/index.html'
 
+
     def count_status(self, object_list):
         counters = {
             'defect_count': 0,  # С дефектом

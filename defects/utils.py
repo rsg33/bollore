@@ -5,10 +5,11 @@ class MyMixin(object):
     """Миксин для классов унаследовавших ListView"""
     model = Defects
     template_name = 'defects/index.html'
-
+    paginate_by = 2
 
     def count_status(self, object_list):
         counters = {
+            'defect_all_count': 0,  # Всего
             'defect_count': 0,  # С дефектом
             'defect_eliminated_count': 0,  # Дефект устранен
             'defect_approved_count': 0,  # Допущен с дефектом
@@ -16,7 +17,7 @@ class MyMixin(object):
         }
 
         for i in object_list:
-            print(i.status.pk)
+            counters['defect_all_count'] = counters['defect_all_count'] + 1
             if i.status.pk == 1:  # С дефектом id=1
                 counters['defect_count'] = counters['defect_count'] + 1
             elif i.status.pk == 2:  # Дефект устранен id=2

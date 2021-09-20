@@ -8,7 +8,6 @@ from .utils import MyMixin
 
 class HomeDefects(MyMixin, ListView):
     """Отображение всех дефектов"""
-    paginate_by = 2
     # Переопределение object_list
     # context_object_name = 'defects'
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load calc_risk_tag %}
 {% block title %}
   {{ title }}  :: {{ block.super }}
 {% endblock %}
@@ -6,7 +7,7 @@
 {% block content %}
   {% include 'inc/_counters.html' %}
   <!-- Распаковываем zip с объектами модели и расчетами рисков для каждой модели -->
-{#  {% for defect, risk_ball in context_mod_zip  %}#}
+  {#  {% for defect, risk_ball in context_mod_zip  %}#}
   {% for defect in object_list %}
     <div class="card mb-3">
       <div class="card-header">
@@ -30,6 +31,7 @@
         <br>
         <!-- Вычисляем уровень риска умножив оценку вероятности на масштаб последствий,
         где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->
+        {% calc_risk defect.type_of_discrepancy.probability_estimate.score defect.type_of_discrepancy.scale_consequences.score as risk_ball %}
         {% if 1 <= risk_ball and risk_ball <= 5 %}
           <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>
         {% elif 6 <= risk_ball and risk_ball <= 10 %}

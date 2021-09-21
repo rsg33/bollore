@@ -8,6 +8,7 @@ class MyMixin(object):
     paginate_by = 2
 
     def count_status(self, object_list):
+        """Счетчик вычесляет кол-во различных статусов дефектов текущего контекста."""
         counters = {
             'defect_all_count': 0,  # Всего
             'defect_count': 0,  # С дефектом
@@ -28,21 +29,8 @@ class MyMixin(object):
                 counters['production_defect_count'] = counters['production_defect_count'] + 1
         return counters
 
-    def calc_risk(self, defects):
-        """Калькулятор рисков для класса"""
-        risk_levels = []  # пустой список оценок риска
-        for item in defects:
-            a = item.type_of_discrepancy.probability_estimate.score  # Балл оценки вероятности дефекта
-            b = item.type_of_discrepancy.scale_consequences.score  # Балл масштаба последствий дефекта
-            risk_level = a * b  # Балл уровня риска
-            risk_levels.append(risk_level)  # Добавляем в список вычисленное значение
-            context_mod_zip = zip(defects, risk_levels)
-        return context_mod_zip
-
     def get_context_data(self, *, object_list=None, **kwargs):
         """Функция которая наследует атрибуты от класса и добавляет доп. атрибуты в контекст"""
         context = super(MyMixin, self).get_context_data(**kwargs)
         context['counters'] = self.count_status(self.object_list)
-        context['context_mod_zip'] = self.calc_risk(self.object_list)  # Распакуем при выводе объектов через цикл for
-        # метод calc_risk из MyMixin
         return context

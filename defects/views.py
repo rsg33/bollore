@@ -83,6 +83,7 @@ class DefectsByBody(MyMixin, ListView):
 class AllBodies(ListView):
     """Отобразить картотеку кузовов в контенте"""
     model = Bodies
+    paginate_by = 14
     extra_context = {'title': 'Картотека кузовов'}
 
 

@@ -14,7 +14,9 @@
   <title>{% block title %}Проект Bollore{% endblock %}</title>
 </head>
 <body>
+{% if request.user.is_authenticated %}
 {% include 'inc/_nav.html' %}
+{% endif %}
 
 <div class="container mt-3">
   <div class="row">

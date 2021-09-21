@@ -1,11 +1,13 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import *
 
 
-class MyMixin(object):
+class MyMixin(LoginRequiredMixin, object):
     """Миксин для классов унаследовавших ListView"""
     model = Defects
     template_name = 'defects/index.html'
-    paginate_by = 2
+    login_url = 'login'
 
     def count_status(self, object_list):
         """Счетчик вычесляет кол-во различных статусов дефектов текущего контекста."""

@@ -1,6 +1,8 @@
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .utils import MyMixin
@@ -8,6 +10,7 @@ from .utils import MyMixin
 
 class HomeDefects(MyMixin, ListView):
     """Отображение всех дефектов"""
+
     # Переопределение object_list
     # context_object_name = 'defects'
 
@@ -87,7 +90,9 @@ class AllBodies(ListView):
     extra_context = {'title': 'Картотека кузовов'}
 
 
-def add_defect(request):
+@login_required(login_url='login')
+def add_defect(request):  # юзается только если залогинен
+    """Добавление дефекта"""
     if request.method == 'POST':
         form = DefectForm(request.POST, request.FILES)
         if form.is_valid():
@@ -127,11 +132,28 @@ def add_defect(request):
                 photo = PhotoDefects(defect=defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
+            return redirect('defect', pk=defect.pk)
 
-            return redirect('home')
     else:
         form = DefectForm()
     return render(request, 'defects/add_defect.html', {'form': form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserLoginForm()
+    return render(request, 'defects/login.html', {'form': form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('home')
 
 # def page_not_found(request, exception):
 #     return HttpResponseNotFound('<h1>Страница не найдена</h1>')

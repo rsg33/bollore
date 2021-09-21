@@ -25,7 +25,7 @@ class HomeDefects(MyMixin, ListView):
 
     def get_queryset(self):
         """Функция переопределяет запрос по умолчанию ко всем объектам, на получение по условию или фильтрации"""
-        return Defects.objects.order_by('-created_at')
+        return Defects.objects.filter(status_id=1).order_by('-created_at')
 
 
 class ViewDefect(DetailView):
@@ -42,6 +42,32 @@ class ViewDefect(DetailView):
         risk_level = a * b  # Балл уровня риска
         context['risk_level'] = risk_level
         return context
+
+
+class DefectsAll(MyMixin, ListView):
+    """Отображение всех дефектов"""
+    allow_empty = False
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DefectsAll, self).get_context_data(**kwargs)
+        context['title'] = 'Дефекты'  # Объявляем заголовок
+        return context
+
+    def get_queryset(self):
+        return Defects.objects.order_by('-created_at')
+
+
+class DefectsByStatus(MyMixin, ListView):
+    """Отображение по выбору статуса дефекта в контенте"""
+    allow_empty = False
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DefectsByStatus, self).get_context_data(**kwargs)
+        context['title'] = Status.objects.get(pk=self.kwargs['pk'])  # Объявляем заголовок
+        return context
+
+    def get_queryset(self):
+        return Defects.objects.filter(status_id=self.kwargs['pk']).order_by('-created_at')
 
 
 class DefectsByWorkshops(MyMixin, ListView):
@@ -132,7 +158,8 @@ def add_defect(request):  # юзается только если залогин�
                 photo = PhotoDefects(defect=defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
-            return redirect('defect', pk=defect.pk)
+            # return redirect('defect', pk=defect.pk)
+            return redirect('home')
 
     else:
         form = DefectForm()

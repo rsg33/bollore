@@ -1,20 +1,3 @@
-{#<nav class="navbar navbar-expand-lg navbar-light bg-light">#}
-{#    <div class="container-fluid">#}
-{#        <a class="navbar-brand" href="{% url 'home' %}">Проект Bollore</a>#}
-{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"#}
-{#                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">#}
-{#            <span class="navbar-toggler-icon"></span>#}
-{#        </button>#}
-{#        <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
-{#            <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="{% url 'add_defect' %}">Добавить дефект</a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </div>#}
-{#    </div>#}
-{#</nav>#}
-
 {% load defects_nav_tag %}
 {% nav_objects as nav_obj %}
 <ul class="nav nav-tabs justify-content-center">
@@ -23,8 +6,25 @@
     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bollore</a>
   </li>
 
-  <li class="nav-item ">
-    <a class="nav-link" aria-current="page" href="{% url 'home' %}">Дефекты</a>
+{#  <li class="nav-item ">#}
+{#    <a class="nav-link" aria-current="page" href="{% url 'home' %}">Дефекты</a>#}
+{#  </li>#}
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" >Дефекты</a>
+    <ul class="dropdown-menu">
+      {% for s in nav_obj.status %}
+        {% if s.pk == nav_obj.workshop_selected %}
+          <li><a class="dropdown-item">{{ s.defect_status }}</a></li>
+        {% else %}
+          <li><a class="dropdown-item" href="{{ s.get_absolute_url }}">{{ s.defect_status }}</a></li>
+        {% endif %}
+      {% endfor %}
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" href="{% url 'all-defects' %}">Все дефекты</a></li>
+    </ul>
   </li>
 
   <li class="nav-item dropdown">

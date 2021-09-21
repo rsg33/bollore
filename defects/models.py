@@ -121,6 +121,9 @@ class Status(models.Model):
     """Статус дефекта"""
     defect_status = models.CharField(max_length=150, verbose_name='Статус дефекта')
 
+    def get_absolute_url(self):
+        return reverse('status', kwargs={'pk': self.pk})
+
     def __str__(self):
         return self.defect_status
 

@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load calc_risk_tag %}
+{% block title %}
+  {{ title }}  :: {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {#  {% include 'inc/_counters.html' %}#}
+
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+
+
+    <div class="col">
+
+      <div class="card card mb-3">
+        <div class="card-header bg-transparent">
+          Сводка по дефектам на {% now "d-m-Y H:i" %}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">
+            Всего: {{ counters.defect_all_count }}
+          </h5>
+          <p class="card-text">
+            <br> С дефектом: {{ counters.defect_count }}
+            <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
+            <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
+            <br> Брак: {{ counters.production_defect_count }}
+            <br>
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_defects_bar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_defects_line"></canvas>
+        </div>
+      </div>
+    </div>
+ <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_defects_doughnut"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
+          integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+      var ctx = document.getElementById('myChart_defects_doughnut').getContext('2d');
+
+      var defects = "{{ counters.defect_count }}";
+      var defect_eliminated = "{{ counters.defect_eliminated_count }}";
+      var defect_approved = "{{ counters.defect_approved_count }}";
+      var production_defect = "{{ counters.production_defect_count }}";
+
+      var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: ['С дефектом', 'Устранено дефектов', 'Допуск к производству', 'Брак'],
+              datasets: [{
+                  label: '# of Votes',
+                  data: [defects, defect_eliminated, defect_approved, production_defect],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+  <script>
+      var ctx = document.getElementById('myChart_defects_bar').getContext('2d');
+
+      var defects = "{{ counters.defect_count }}";
+      var defect_eliminated = "{{ counters.defect_eliminated_count }}";
+      var defect_approved = "{{ counters.defect_approved_count }}";
+      var production_defect = "{{ counters.production_defect_count }}";
+
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['Дефекты', 'Устранено', 'Допуск', 'Брак'],
+              datasets: [{
+                  label: 'Сводка по дефектам на {% now "d-m-Y H:i" %}',
+                  data: [defects, defect_eliminated, defect_approved, production_defect],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+  <script>
+      var ctx = document.getElementById('myChart_defects_line').getContext('2d');
+
+      var defects = "{{ counters.defect_count }}";
+      var defect_eliminated = "{{ counters.defect_eliminated_count }}";
+      var defect_approved = "{{ counters.defect_approved_count }}";
+      var production_defect = "{{ counters.production_defect_count }}";
+
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: ['Дефекты', 'Устранено', 'Допуск', 'Брак'],
+              datasets: [{
+                  label: 'Сводка по дефектам на {% now "d-m-Y H:i" %}',
+                  data: [defects, defect_eliminated, defect_approved, production_defect],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+{% endblock %}

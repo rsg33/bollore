@@ -1,11 +1,48 @@
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .utils import MyMixin
+
+
+class MyDashboard(ListView):
+    """Показания статистики на главной"""
+    template_name = 'defects/dashboard.html'
+    allow_empty = False
+
+    def count_status(self, object_list):
+        """Счетчик вычесляет кол-во различных статусов дефектов текущего контекста."""
+        counters = {
+            'defect_all_count': 0,  # Всего
+            'defect_count': 0,  # С дефектом
+            'defect_eliminated_count': 0,  # Дефект устранен
+            'defect_approved_count': 0,  # Допущен с дефектом
+            'production_defect_count': 0,  # Брак
+        }
+
+        for i in object_list:
+            counters['defect_all_count'] = counters['defect_all_count'] + 1
+            if i.status.pk == 1:  # С дефектом id=1
+                counters['defect_count'] = counters['defect_count'] + 1
+            elif i.status.pk == 2:  # Дефект устранен id=2
+                counters['defect_eliminated_count'] = counters['defect_eliminated_count'] + 1
+            elif i.status.pk == 3:  # Допущен с дефектом id=3
+                counters['defect_approved_count'] = counters['defect_approved_count'] + 1
+            elif i.status.pk == 4:  # Брак id=4
+                counters['production_defect_count'] = counters['production_defect_count'] + 1
+        return counters
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MyDashboard, self).get_context_data(**kwargs)
+        context['title'] = 'Статистика'  # Объявляем заголовок
+        context['counters'] = self.count_status(self.object_list)
+        return context
+
+    def get_queryset(self):
+        return Defects.objects.order_by('-created_at')
 
 
 class HomeDefects(MyMixin, ListView):
@@ -28,7 +65,7 @@ class HomeDefects(MyMixin, ListView):
         return Defects.objects.filter(status_id=1).order_by('-created_at')
 
 
-class ViewDefect(DetailView):
+class ViewDefect(MyMixin, DetailView):
     """Отображение выбранного дефекта с подробностями"""
     model = Defects
 
@@ -112,7 +149,7 @@ class DefectsByBody(MyMixin, ListView):
 class AllBodies(ListView):
     """Отобразить картотеку кузовов в контенте"""
     model = Bodies
-
+    paginate_by = 14
     extra_context = {'title': 'Картотека кузовов'}
 
 

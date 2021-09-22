@@ -5,13 +5,8 @@
   <li class="nav-item">
     <a class="nav-link" href="{% url 'home' %}" tabindex="-1" aria-disabled="true">Bollore</a>
   </li>
-
-{#  <li class="nav-item ">#}
-{#    <a class="nav-link" aria-current="page" href="{% url 'home' %}">Дефекты</a>#}
-{#  </li>#}
-
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" >Дефекты</a>
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Дефекты</a>
     <ul class="dropdown-menu">
       {% for s in nav_obj.status %}
         {% if s.pk == nav_obj.workshop_selected %}
@@ -66,6 +61,9 @@
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'all-bodies' %}">Картотека кузовов</a>
   </li>
+  <li class="nav-item ">
+    <a class="nav-link" href="{% url 'my-dashboard' %}">Статистика</a>
+  </li>
   {% if request.user.is_authenticated %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'add_defect' %}">Добавить дефект</a>
@@ -74,7 +72,7 @@
   <span class="navbar-text">
   {% if request.user.is_authenticated %}
     {{ user.last_name }} {{ user.first_name }} | <a href="{% url 'logout' %}">Выход</a>
-    {% else %}
+  {% else %}
     <a href="{% url 'login' %}">Войти</a>
   {% endif %}
 </span>

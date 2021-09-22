@@ -11,7 +11,6 @@ urlpatterns = [
     path('status/<int:pk>/', DefectsByStatus.as_view(), name='status'),
     path('all-defects/', DefectsAll.as_view(), name='all-defects'),
 
-
     path('defect/<int:pk>/', ViewDefect.as_view(), name='defect'),
     path('add-defect/', add_defect, name='add_defect'),
 
@@ -22,4 +21,6 @@ urlpatterns = [
     path('body/<int:body_id>/', DefectsByBody.as_view(), name='bodies'),
 
     path('all-bodies/', AllBodies.as_view(), name='all-bodies'),
+
+    path('dashboard/', MyDashboard.as_view(), name='my-dashboard'),
 ]

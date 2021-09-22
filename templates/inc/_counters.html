@@ -1,12 +1,38 @@
-  <div class="card mb-3">
-    <div class="card-header">
+{#<div class="card mb-3">#}
+{#      <div class="card-header">#}
+{#        Сводка по дефектам на {% now "d-m-Y H:i" %}#}
+{#      </div>#}
+{#      <div class="card-header">#}
+{#        Всего: {{ counters.defect_all_count }}#}
+{#        <br> С дефектом: {{ counters.defect_count }}#}
+{#        <br> Устранено дефектов: {{ counters.defect_eliminated_count }}#}
+{#        <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}#}
+{#        <br> Брак: {{ counters.production_defect_count }}#}
+{#      </div>#}
+{#</div>#}
+
+
+<div class="col">
+  <div class="card card border-primary mb-3">
+    <div class="card-header bg-transparent border-primary">
       Сводка по дефектам на {% now "d-m-Y H:i" %}
     </div>
-    <div class="card-header">
-      Всего: {{ counters.defect_all_count }}
+    <div class="card-body">
+      <h5 class="card-title">
+        Всего: {{ counters.defect_all_count }}
+      </h5>
       <br> С дефектом: {{ counters.defect_count }}
       <br> Устранено дефектов: {{ counters.defect_eliminated_count }}
       <br> Дефекты допуском к производству: {{ counters.defect_approved_count }}
-      <br> Брак : {{ counters.production_defect_count }}
+      <br> Брак: {{ counters.production_defect_count }}
+      <br><br>
+      <p align="center">
+        <a href="{{ defect.get_absolute_url }}" class="btn btn-outline-primary">Ананлитика ...</a>
+      </p>
+
+    </div>
+    <div class="card-footer bg-transparent border-primary">
+      Всего: {{ counters.defect_all_count }}
     </div>
   </div>
+</div>

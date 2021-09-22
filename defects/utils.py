@@ -8,6 +8,7 @@ class MyMixin(LoginRequiredMixin, object):
     model = Defects
     template_name = 'defects/index.html'
     login_url = 'login'
+    paginate_by = 5
 
     def count_status(self, object_list):
         """Счетчик вычесляет кол-во различных статусов дефектов текущего контекста."""

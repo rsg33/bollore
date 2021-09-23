@@ -1,3 +1,4 @@
+import random
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
@@ -145,30 +146,28 @@ class MyDashboard(ListView):
                 counters['production_defect_count'] = counters['production_defect_count'] + 1
         return counters
 
-    def defects_body_count(self):
+    def defects_body_count(self, request_base):
         """Запрос возвращает номера кузовов у которых есть дефекты и кол-во дефектов для каждого кузова"""
-        defects_body_count = Bodies.objects.values('body_number').filter(
-            defects_body_number__status_id=1
-        ).annotate(total=Count('body_number')).order_by('body_number')
-
         names_bodies = []
         body_count = []
-        # str_names_bodies
-        # str_
+        color_rgba = []
 
-        for body in defects_body_count:
+        for body in request_base:
             names_bodies.append(body['body_number'])
             body_count.append(body['total'])
-        print(names_bodies)
-        print(body_count)
-
-        return names_bodies, body_count
+            color_rgba.append(random.randint(0, 255))
+        return names_bodies, body_count, color_rgba
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MyDashboard, self).get_context_data(**kwargs)
         context['title'] = 'Статистика'  # Объявляем заголовок
         context['counters'] = self.count_status(self.object_list)
-        context['names_bodies'], context['body_count'] = self.defects_body_count()
+
+        request_base = Bodies.objects.values('body_number').filter(
+            defects_body_number__status_id=1
+        ).annotate(total=Count('body_number')).order_by('body_number')
+
+        context['names_bodies'], context['body_count'], context['color_rgba'] = self.defects_body_count(request_base)
 
         return context
 

@@ -33,9 +33,7 @@
 
       </div>
     </div>
-
-
-
+    <!-- Сводка по дефактам -->
     <div class="col">
       <div class="card card  mb-3">
         <div class="card-body">
@@ -43,7 +41,6 @@
         </div>
       </div>
     </div>
-
     <div class="col">
       <div class="card card  mb-3">
         <div class="card-body">
@@ -51,7 +48,7 @@
         </div>
       </div>
     </div>
- <div class="col">
+    <div class="col">
       <div class="card card  mb-3">
         <div class="card-body">
           <canvas id="myChart_defects_doughnut"></canvas>
@@ -59,52 +56,36 @@
       </div>
     </div>
 
+    <!-- Сводка по дефактам на кузовах -->
+    <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_body_doughnut"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_body_bar"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card card  mb-3">
+        <div class="card-body">
+          <canvas id="myChart_body_line"></canvas>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
           integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-  <script>
-      var ctx = document.getElementById('myChart_defects_doughnut').getContext('2d');
-
-      var defects = "{{ counters.defect_count }}";
-      var defect_eliminated = "{{ counters.defect_eliminated_count }}";
-      var defect_approved = "{{ counters.defect_approved_count }}";
-      var production_defect = "{{ counters.production_defect_count }}";
-
-      var myChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-              labels: ['С дефектом', 'Устранено дефектов', 'Допуск к производству', 'Брак'],
-              datasets: [{
-                  label: '# of Votes',
-                  data: [defects, defect_eliminated, defect_approved, production_defect],
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(153, 102, 255, 0.2)'
-
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(153, 102, 255, 1)'
-                  ],
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-  </script>
+  <!-- Сводка по дефактам -->
   <script>
       var ctx = document.getElementById('myChart_defects_bar').getContext('2d');
 
@@ -185,9 +166,8 @@
           }
       });
   </script>
-
   <script>
-      var ctx = document.getElementById('myChart_body_doughnut').getContext('2d');
+      var ctx = document.getElementById('myChart_defects_doughnut').getContext('2d');
 
       var defects = "{{ counters.defect_count }}";
       var defect_eliminated = "{{ counters.defect_eliminated_count }}";
@@ -197,9 +177,9 @@
       var myChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
-              labels: ['Дефекты', 'Устранено', 'Допуск', 'Брак'],
+              labels: ['С дефектом', 'Устранено дефектов', 'Допуск к производству', 'Брак'],
               datasets: [{
-                  label: 'Сводка по дефектам на {% now "d-m-Y H:i" %}',
+                  label: '# of Votes',
                   data: [defects, defect_eliminated, defect_approved, production_defect],
                   backgroundColor: [
                       'rgba(255, 99, 132, 0.2)',
@@ -225,6 +205,125 @@
               }
           }
       });
+  </script>
 
+  <!-- Сводка по дефактам на кузовах -->
+  <script>
+      var ctx = document.getElementById('myChart_body_bar').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: [{% for i in names_bodies %}
+                  "{{ i }}",
+              {% endfor %}
+              ],
+              datasets: [{
+                  label: 'Сводка по дефектам на кузовах',
+                  data: [{% for i in body_count %}
+                      "{{ i }}",
+                  {% endfor %}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+  <script>
+      var ctx = document.getElementById('myChart_body_line').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: [{% for i in names_bodies %}
+                  "{{ i }}",
+              {% endfor %}
+              ],
+              datasets: [{
+                  label: 'Сводка по дефектам на кузовах',
+                  data: [{% for i in body_count %}
+                      "{{ i }}",
+                  {% endfor %}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+  <script>
+      var ctx = document.getElementById('myChart_body_doughnut').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: [{% for i in names_bodies %}
+                  "{{ i }}",
+              {% endfor %}
+              ],
+              datasets: [{
+                  label: 'Сводка по дефектам на кузовах',
+                  data: [{% for i in body_count %}
+                      "{{ i }}",
+                  {% endfor %}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
 
 {% endblock %}

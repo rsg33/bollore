@@ -5,10 +5,18 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Login</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary btn-block">Войти</button>
-  </form>
+<div class="container mt-3" align="center">
+  <div class="card text-center" style="width: 20rem;">
+    <div class="card-body">
+      <h5 class="card-title">Login</h5>
+      <p class="card-text">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+      </form>
+      </p>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -185,4 +185,46 @@
           }
       });
   </script>
+
+  <script>
+      var ctx = document.getElementById('myChart_body_doughnut').getContext('2d');
+
+      var defects = "{{ counters.defect_count }}";
+      var defect_eliminated = "{{ counters.defect_eliminated_count }}";
+      var defect_approved = "{{ counters.defect_approved_count }}";
+      var production_defect = "{{ counters.production_defect_count }}";
+
+      var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: ['Дефекты', 'Устранено', 'Допуск', 'Брак'],
+              datasets: [{
+                  label: 'Сводка по дефектам на {% now "d-m-Y H:i" %}',
+                  data: [defects, defect_eliminated, defect_approved, production_defect],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(153, 102, 255, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(153, 102, 255, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+
+
 {% endblock %}

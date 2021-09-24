@@ -217,8 +217,8 @@ def add_defect(request):  # юзается только если залогин�
                 photo = PhotoDefects(defect=defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
-            # return redirect('defect', pk=defect.pk)
-            return redirect('home')
+            return redirect('defect', pk=defect.pk)
+            # return redirect('home')
 
     else:
         form = DefectForm()

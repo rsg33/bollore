@@ -28,7 +28,13 @@ class HomeDefects(MyMixin, ListView):
 
     def get_queryset(self):
         """Функция переопределяет запрос по умолчанию ко всем объектам, на получение по условию или фильтрации"""
-        return Defects.objects.filter(status_id=1).order_by('-created_at')
+        try:
+            a = Workshops.objects.get(responsible_executor_id=self.request.user.id)
+            return Defects.objects.filter(status_id=1, workshop__responsible_executor_id=self.request.user.id).order_by(
+                '-created_at')
+        except Workshops.DoesNotExist:
+            return Defects.objects.filter(status_id=1).order_by(
+                '-created_at')
 
 
 class ViewDefect(MyMixin, DetailView):
@@ -223,6 +229,58 @@ def add_defect(request):  # юзается только если залогин�
     else:
         form = DefectForm()
     return render(request, 'defects/add_defect.html', {'form': form})
+
+
+@login_required(login_url='login')
+def edit_defect(request, id_defect):  # юзается только если залогинен
+    """Редактирование дефекта"""
+    defect = Defects.objects.get(id=id_defect)
+    if request.method == 'POST':
+        form = DefectForm(request.POST, request.FILES)
+        if form.is_valid():
+            date_defect_detection = form.cleaned_data['date_defect_detection']
+            term_up_to = form.cleaned_data['term_up_to']
+            status = form.cleaned_data['status']
+            workshop = form.cleaned_data['workshop']
+            detail = form.cleaned_data['detail']
+            body_number = form.cleaned_data['body_number']
+            type_of_discrepancy = form.cleaned_data['type_of_discrepancy']
+            number_of_inconsistencies = form.cleaned_data['number_of_inconsistencies']
+            priority = form.cleaned_data['priority']
+            discrepancy_description = form.cleaned_data['discrepancy_description']
+            # Надо проверить залогинен ли и выдать исключение
+            quality_controller = request.user  # Надо проверить залогинен ли и выдать исключение
+            # Надо проверить залогинен ли и выдать исключение
+
+            # Записываем полученные данные из формы в таблицу Defects
+            defect = Defects.objects.create(
+                date_defect_detection=date_defect_detection,
+                term_up_to=term_up_to,
+                status=status,
+                workshop=workshop,
+                detail=detail,
+                body_number=body_number,
+                type_of_discrepancy=type_of_discrepancy,
+                number_of_inconsistencies=number_of_inconsistencies,
+                priority=priority,
+                discrepancy_description=discrepancy_description,
+                # quality_controller=request.user,
+                quality_controller=quality_controller,
+                responsible_executor=workshop.responsible_executor,
+            )
+            # Загружаем изображения и прописываем их в таблице PhotoDefects
+            for f in request.FILES.getlist('images'):
+                data = f.read()  # Если файл целиком умещается в памяти
+                photo = PhotoDefects(defect=defect)
+                photo.photo.save(f.name, ContentFile(data))
+                photo.save()
+            return redirect('defect', pk=defect.pk)
+            #return redirect('home')
+
+    if request.method == 'GET':
+        form = DefectEditForm(instance=defect)
+        print(defect.pk)
+    return render(request, 'defects/edit_defect.html', {'form': form, 'defect': defect})
 
 
 def user_login(request):

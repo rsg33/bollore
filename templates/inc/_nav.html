@@ -64,7 +64,7 @@
   <li class="nav-item ">
     <a class="nav-link" href="{% url 'my-dashboard' %}">Статистика</a>
   </li>
-  {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated and request.user.groups.all.0.name == 'Control Inspectors'%}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'add_defect' %}">Добавить дефект</a>
     </li>

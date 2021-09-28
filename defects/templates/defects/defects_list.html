@@ -5,16 +5,14 @@
 {% endblock %}
 
 {% block content %}
-{#  {% include 'inc/_counters.html' %}#}
+  {#  {% include 'inc/_counters.html' %}#}
 
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
 
-{#  {% include 'inc/_counters.html' %}#}
-
 
     {% for defect in object_list %}
- <div class="col">
+      <div class="col">
         <!-- Дефект -->
         {% if defect.status.pk == 1 %}
           <div class="card card border-danger mb-3">
@@ -28,7 +26,7 @@
               <p class="card-text">
                 Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
-
+                <br> На согласовании устранения в ОТК: {{ object.for_checking|yesno:"ДА,НЕТ" }}
                 <br> Цех: {{ defect.workshop }}
                 <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
@@ -133,7 +131,7 @@
             </div>
             <div class="card-body">
               <h5 class="card-title">
-                  <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
+                <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
               </h5>
               <p class="card-text">
                 Дата обнаружения: {{ defect.date_defect_detection }}
@@ -161,54 +159,54 @@
 
 
 
-{#  {% for defect in object_list %}#}
-{#    <div class="card mb-3">#}
-{#      <div class="card-header">#}
-{#        Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>#}
-{#      </div>#}
-{##}
-{#      <div class="card-header">#}
-{#        {% if defect.status.pk == 4 %}#}
-{#          <p style="background-color:#990000; color:#ffffff"> БРАК </p>#}
-{#        {% elif defect.status.pk == 3 %}#}
-{#          <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>#}
-{#        {% elif defect.status.pk == 2 %}#}
-{#          <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>#}
-{#        {% elif defect.status.pk == 1 %}#}
-{#          <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>#}
-{#        {% else %}#}
-{#          <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>#}
-{#        {% endif %}#}
-{#        Дата обнаружения: {{ defect.date_defect_detection }}#}
-{#        <br> Срок до: {{ defect.term_up_to }}#}
-{#        <br>#}
-{#        <!-- Вычисляем уровень риска умножив оценку вероятности на масштаб последствий,#}
-{#        где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->#}
-{#        {% calc_risk defect.type_of_discrepancy.probability_estimate.score defect.type_of_discrepancy.scale_consequences.score as risk_ball %}#}
-{#        {% if 1 <= risk_ball and risk_ball <= 5 %}#}
-{#          <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>#}
-{#        {% elif 6 <= risk_ball and risk_ball <= 10 %}#}
-{#          <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>#}
-{#        {% elif 12 <= risk_ball and risk_ball <= 15 %}#}
-{#          <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>#}
-{#        {% elif 16 <= risk_ball and risk_ball <= 25 %}#}
-{#          <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>#}
-{#        {% else %}#}
-{#          <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>#}
-{#        {% endif %}#}
-{##}
-{#        Цех: {{ defect.workshop }}#}
-{#        <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}#}
-{#        <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}#}
-{#        {{ defect.responsible_executor.first_name }} <br>#}
-{#        <br> <a href="{{ defect.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>#}
-{#      </div>#}
-{##}
-{#      <div class="card-footer text-muted">#}
-{#        {{ defect.created_at|date:"Y-m-d H:i:s" }}#}
-{#      </div>#}
-{#    </div>#}
-{#  {% endfor %}#}
+  {#  {% for defect in object_list %}#}
+  {#    <div class="card mb-3">#}
+  {#      <div class="card-header">#}
+  {#        Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>#}
+  {#      </div>#}
+  {##}
+  {#      <div class="card-header">#}
+  {#        {% if defect.status.pk == 4 %}#}
+  {#          <p style="background-color:#990000; color:#ffffff"> БРАК </p>#}
+  {#        {% elif defect.status.pk == 3 %}#}
+  {#          <p style="background-color:#ffa500; color:#ffffff"> ДЕФЕКТ C ДОПУСКОМ К ПРОИЗВОДСТВУ </p>#}
+  {#        {% elif defect.status.pk == 2 %}#}
+  {#          <p style="background-color:#00cc00; color:#ffffff"> ДЕФЕКТ УСТРАНЁН </p>#}
+  {#        {% elif defect.status.pk == 1 %}#}
+  {#          <p style="background-color:#ff0000; color:#ffffff"> ОБНАРУЖЕН ДЕФЕКТ </p>#}
+  {#        {% else %}#}
+  {#          <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>#}
+  {#        {% endif %}#}
+  {#        Дата обнаружения: {{ defect.date_defect_detection }}#}
+  {#        <br> Срок до: {{ defect.term_up_to }}#}
+  {#        <br>#}
+  {#        <!-- Вычисляем уровень риска умножив оценку вероятности на масштаб последствий,#}
+  {#        где 1-5 Невысокий риск, 6-10 Средний риск, 12-15 Высокий риск, 16 и выше - Крайне высокий риск -->#}
+  {#        {% calc_risk defect.type_of_discrepancy.probability_estimate.score defect.type_of_discrepancy.scale_consequences.score as risk_ball %}#}
+  {#        {% if 1 <= risk_ball and risk_ball <= 5 %}#}
+  {#          <p style="background-color:#00ff00; color:#ffffff"> НЕВЫСОКИЙ РИСК </p>#}
+  {#        {% elif 6 <= risk_ball and risk_ball <= 10 %}#}
+  {#          <p style="background-color:#ffa500; color:#ffffff"> СРЕДНИЙ РИСК </p>#}
+  {#        {% elif 12 <= risk_ball and risk_ball <= 15 %}#}
+  {#          <p style="background-color:#ff0000; color:#ffffff"> ВЫСОКИЙ РИСК </p>#}
+  {#        {% elif 16 <= risk_ball and risk_ball <= 25 %}#}
+  {#          <p style="background-color:#990000; color:#ffffff"> КРАЙНЕ ВЫСОКИЙ РИСК </p>#}
+  {#        {% else %}#}
+  {#          <p style="background-color:#990000; color:#ffffff"> ОШИБКА НА СЕРВЕРЕ </p>#}
+  {#        {% endif %}#}
+  {##}
+  {#        Цех: {{ defect.workshop }}#}
+  {#        <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}#}
+  {#        <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}#}
+  {#        {{ defect.responsible_executor.first_name }} <br>#}
+  {#        <br> <a href="{{ defect.get_absolute_url }}" class="btn btn-primary">Подробнее...</a>#}
+  {#      </div>#}
+  {##}
+  {#      <div class="card-footer text-muted">#}
+  {#        {{ defect.created_at|date:"Y-m-d H:i:s" }}#}
+  {#      </div>#}
+  {#    </div>#}
+  {#  {% endfor %}#}
 
 
 {% endblock %}

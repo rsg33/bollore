@@ -23,4 +23,7 @@ urlpatterns = [
     path('all-bodies/', AllBodies.as_view(), name='all-bodies'),
 
     path('dashboard/', MyDashboard.as_view(), name='my-dashboard'),
+
+    path('defect/<int:id_defect>/edit/', edit_defect, name='edit_defect'),
+    # path('delete/<int:id>/', views.delete),
 ]

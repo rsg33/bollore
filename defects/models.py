@@ -158,7 +158,8 @@ class Defects(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_defect_detection = models.DateField(verbose_name='Дата обнаружения')
     term_up_to = models.DateTimeField(verbose_name='Срок до')
-    for_checking = models.BooleanField(default=False, verbose_name='На проверку')
+    BOOL_CHOICES = ((True, 'Да'), (False, 'Нет'))
+    for_checking = models.BooleanField(choices=BOOL_CHOICES, default=False, verbose_name='На согласование в ОТК')
     status = models.ForeignKey(Status,
                                on_delete=models.PROTECT,
                                related_name='defects_status',

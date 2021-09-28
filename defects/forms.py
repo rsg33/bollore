@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms import ModelForm
 
 from .models import *
 
@@ -92,28 +92,21 @@ class DefectForm(forms.Form):
 
 
 
-class DefectEditForm(forms.Form, ModelForm):
+class DefectEditForm(ModelForm):
     # date_defect_detection = forms.DateField(widget=forms.SelectDateWidget)
     date_defect_detection = forms.DateField(widget=forms.DateInput(
-        attrs={'type': 'date',
-               'class': 'form-control',
+        attrs={'class': 'form-control',
                'placeholder': 'Select a date'
                }),
         label='Дата обнаружения'
     )
     term_up_to = forms.DateTimeField(widget=forms.DateTimeInput(
-        attrs={'type': 'datetime-local',
-               'class': 'form-control',
+        attrs={'class': 'form-control',
                'placeholder': 'Select a date'
                }),
         label='Срок до'
     )
-    for_checking = forms.BooleanField(
-        label='На согласовании в ОТК',
-        widget=forms.CheckboxInput(),
-        initial=False,
-        required=False
-    )
+
     status = forms.ModelChoiceField(
         queryset=Status.objects.all(),
         label='Статус дефекта',
@@ -179,4 +172,5 @@ class DefectEditForm(forms.Form, ModelForm):
 
     class Meta:
         model = Defects
-        fields = '__all__'
+        fields = 'date_defect_detection', 'term_up_to', 'priority', 'for_checking', 'status', 'workshop', 'detail', \
+                 'body_number', 'type_of_discrepancy', 'discrepancy_description', 'images'

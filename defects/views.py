@@ -236,10 +236,11 @@ def edit_defect(request, id_defect):  # юзается только если з�
     """Редактирование дефекта"""
     defect = Defects.objects.get(id=id_defect)
     if request.method == 'POST':
-        form = DefectForm(request.POST, request.FILES)
+        form = DefectEditForm(request.POST, request.FILES)
         if form.is_valid():
             date_defect_detection = form.cleaned_data['date_defect_detection']
             term_up_to = form.cleaned_data['term_up_to']
+            for_checking = form.cleaned_data['for_checking']
             status = form.cleaned_data['status']
             workshop = form.cleaned_data['workshop']
             detail = form.cleaned_data['detail']
@@ -248,14 +249,15 @@ def edit_defect(request, id_defect):  # юзается только если з�
             number_of_inconsistencies = form.cleaned_data['number_of_inconsistencies']
             priority = form.cleaned_data['priority']
             discrepancy_description = form.cleaned_data['discrepancy_description']
-            # Надо проверить залогинен ли и выдать исключение
+            # Надо проверить залогинен ли и выдать исключение (Дописать это место)
             quality_controller = request.user  # Надо проверить залогинен ли и выдать исключение
             # Надо проверить залогинен ли и выдать исключение
 
             # Записываем полученные данные из формы в таблицу Defects
-            defect = Defects.objects.create(
+            defect = Defects.objects.update(
                 date_defect_detection=date_defect_detection,
                 term_up_to=term_up_to,
+                for_checking=for_checking,
                 status=status,
                 workshop=workshop,
                 detail=detail,
@@ -271,10 +273,10 @@ def edit_defect(request, id_defect):  # юзается только если з�
             # Загружаем изображения и прописываем их в таблице PhotoDefects
             for f in request.FILES.getlist('images'):
                 data = f.read()  # Если файл целиком умещается в памяти
-                photo = PhotoDefects(defect=defect)
+                photo = PhotoDefects(defect_id=id_defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
-            return redirect('defect', pk=defect.pk)
+            return redirect('defect', pk=id_defect)
             #return redirect('home')
 
     if request.method == 'GET':

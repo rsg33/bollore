@@ -17,16 +17,17 @@
         {% if defect.status.pk == 1 %}
           <div class="card card border-danger mb-3">
             <div class="card-header bg-transparent border-danger">
-              Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+              Номер дефекта: {{ defect.pk }}
             </div>
             <div class="card-body">
               <h5 class="card-title">
                 <p style="background-color:#ff0000; color:#ffffff" align="center"> ОБНАРУЖЕН ДЕФЕКТ </p>
               </h5>
               <p class="card-text">
-                Дата обнаружения: {{ defect.date_defect_detection }}
+                Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+                <br> Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
-                <br> На согласовании устранения в ОТК: {{ object.for_checking|yesno:"ДА,НЕТ" }}
+                <br> Приоритет: {{ defect.priority }}
                 <br> Цех: {{ defect.workshop }}
                 <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
@@ -44,16 +45,17 @@
         {% elif defect.status.pk == 2 %}
           <div class="card card border-success mb-3">
             <div class="card-header bg-transparent border-success">
-              Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+              Номер дефекта: {{ defect.pk }}
             </div>
             <div class="card-body">
               <h5 class="card-title">
                 <p style="background-color:#00cc00; color:#ffffff" align="center"> ДЕФЕКТ УСТРАНЁН </p>
               </h5>
               <p class="card-text">
-                Дата обнаружения: {{ defect.date_defect_detection }}
+                Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+                <br>  Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
-
+                <br> Приоритет: {{ defect.priority }}
                 <br> Цех: {{ defect.workshop }}
                 <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
@@ -71,7 +73,7 @@
         {% elif defect.status.pk == 3 %}
           <div class="card card border-warning mb-3">
             <div class="card-header bg-transparent border-warning">
-              Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+              Номер дефекта: {{ defect.pk }}
             </div>
             <div class="card-body">
               <h5 class="card-title">
@@ -79,9 +81,10 @@
                   К ПРОИЗВОДСТВУ </p>
               </h5>
               <p class="card-text">
-                Дата обнаружения: {{ defect.date_defect_detection }}
+                Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+                <br> Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
-
+                <br> Приоритет: {{ defect.priority }}
                 <br> Цех: {{ defect.workshop }}
                 <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
@@ -99,16 +102,17 @@
         {% elif defect.status.pk == 4 %}
           <div class="card card border-secondary mb-3">
             <div class="card-header bg-transparent border-secondary">
-              Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+              Номер дефекта: {{ defect.pk }}
             </div>
             <div class="card-body ">
               <h5 class="card-title">
                 <p style="background-color:#a0a0a0; color:#ffffff" align="center"> БРАК </p>
               </h5>
               <p class="card-text">
-                Дата обнаружения: {{ defect.date_defect_detection }}
+                Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+                <br> Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
-
+                <br> Приоритет: {{ defect.priority }}
                 <br> Цех: {{ defect.workshop }}
                 <br> Контролер ОТК: {{ defect.quality_controller.last_name }} {{ defect.quality_controller.first_name }}
                 <br> Ответственный исполнитель: {{ defect.responsible_executor.last_name }}
@@ -127,14 +131,15 @@
         {% else %}
           <div class="card card border-danger mb-3">
             <div class="card-header bg-transparent border-danger">
-              Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+              Номер дефекта: {{ defect.pk }}
             </div>
             <div class="card-body">
               <h5 class="card-title">
                 <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
               </h5>
               <p class="card-text">
-                Дата обнаружения: {{ defect.date_defect_detection }}
+                Номер кузова: <a href="{{ defect.body_number.get_absolute_url }}">{{ defect.body_number }}</a>
+                <br> Дата обнаружения: {{ defect.date_defect_detection }}
                 <br> Срок до: {{ defect.term_up_to }}
 
                 <br> Цех: {{ defect.workshop }}
@@ -150,8 +155,6 @@
             </div>
           </div>
         {% endif %}
-
-
       </div>
     {% endfor %}
 

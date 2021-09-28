@@ -33,7 +33,7 @@
 {% block content %}
   <div class="card mb-3">
     <div class="card-header">
-      Номер кузова: <a href="{{ object.body_number.get_absolute_url }}">{{ object.body_number }}</a>
+      Номер дефекта: {{ object.pk }}
     </div>
 
     <div class="card-header">
@@ -48,8 +48,10 @@
       {% else %}
         <p style="background-color:#ff0000; color:#ffffff">ОШИБКА В ПРОГРАММЕ</p>
       {% endif %}
-      Дата обнаружения: {{ object.date_defect_detection }}
+      Номер кузова: <a href="{{ object.body_number.get_absolute_url }}">{{ object.body_number }}</a>
+      <br> Дата обнаружения: {{ object.date_defect_detection }}
       <br> Срок до: {{ object.term_up_to }}
+      <br> Приоритет: {{ object.priority }}
       <br> На согласовании устранения в ОТК: {{ object.for_checking|yesno:"ДА,НЕТ" }}
       <br><br>
       <!-- Вычисляем уровень риска умножив оценку вероятности на маштаб последствий,
@@ -81,7 +83,6 @@
         <td><a href="edit/">Изменить</a> |
           <a href="delete/">Удалить</a></td>
       {% endif %}
-
     </div>
 
     <div class="row">

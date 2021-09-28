@@ -1,0 +1,32 @@
+
+
+
+{% extends 'base.html' %}
+{% load calc_risk_tag %}
+{% block title %}
+  {{ title }}  :: {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="col">
+  <div class="card card border-danger mb-3">
+    <div class="card-header bg-transparent border-danger">
+      Номер дефекта: {{ object }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">
+        <p style="background-color:#ff0000; color:#ffffff" align="center"> ТЫ ДЕЙСТВИТЕЛЬНО ХОЧЕШЬ УДАЛИТЬ
+          ДЕФЕКТ {{ object }}? </p>
+      </h5>
+      <form method="post">{% csrf_token %}
+        <p  align="center">
+        <input type="submit" value="УДАЛИТЬ" class="btn btn-outline-danger">
+       </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

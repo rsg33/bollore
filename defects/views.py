@@ -1,11 +1,11 @@
 import random
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
-
 from django.db.models import Count
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, DeleteView
 
 from .forms import *
 from .utils import MyMixin
@@ -284,6 +284,15 @@ def edit_defect(request, id_defect):  # юзается только если з�
         print(defect.pk)
     return render(request, 'defects/edit_defect.html', {'form': form, 'defect': defect})
 
+
+class DeleteDefectView(MyMixin, DeleteView):
+    success_url = "/"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """Функция которая наследует атрибуты от класса и добавляет доп. атрибуты в контекст"""
+        context = super(DeleteDefectView, self).get_context_data(**kwargs)
+        context['title'] = 'Удаляем дефект'  # Объявляем заголовок
+        return context
 
 def user_login(request):
     if request.method == 'POST':

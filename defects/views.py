@@ -1,9 +1,10 @@
 import random
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.base import ContentFile
+from django.core.mail import send_mail
 from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, DeleteView

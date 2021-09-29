@@ -1,5 +1,6 @@
 import random
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
@@ -223,6 +224,19 @@ def add_defect(request):  # юзается только если залогин�
                 photo = PhotoDefects(defect=defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
+
+            url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+            send_mail(
+                'Обнаружен дефект',
+                f"""
+                Кузов: {body_number},
+                Цех: {workshop} 
+                Тип: {type_of_discrepancy} 
+                Ссылка на дефект: {url_defect}""",
+                'otk-bmg@bakulingroup.ru',
+                ['s.rubtsov@bakulingroup.ru'],
+                fail_silently=False,
+            )
             return redirect('defect', pk=defect.pk)
             # return redirect('home')
 
@@ -277,7 +291,7 @@ def edit_defect(request, id_defect):  # юзается только если з�
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
             return redirect('defect', pk=id_defect)
-            #return redirect('home')
+            # return redirect('home')
 
     if request.method == 'GET':
         form = DefectEditForm(instance=defect)
@@ -293,6 +307,7 @@ class DeleteDefectView(MyMixin, DeleteView):
         context = super(DeleteDefectView, self).get_context_data(**kwargs)
         context['title'] = 'Удаляем дефект'  # Объявляем заголовок
         return context
+
 
 def user_login(request):
     if request.method == 'POST':

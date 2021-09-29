@@ -225,18 +225,20 @@ def add_defect(request):  # юзается только если залогин�
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
 
-            url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
-            send_mail(
-                'Обнаружен дефект',
-                f"""
-                Кузов: {body_number},
-                Цех: {workshop} 
-                Тип: {type_of_discrepancy} 
-                Ссылка на дефект: {url_defect}""",
-                'otk-bmg@bakulingroup.ru',
-                ['s.rubtsov@bakulingroup.ru'],
-                fail_silently=False,
-            )
+            if status.id == 1:
+                url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+                send_mail(
+                    status,
+                    f"""
+                    Статус: {status},
+                    Кузов: {body_number},
+                    Цех: {workshop} 
+                    Тип: {type_of_discrepancy} 
+                    Ссылка на дефект: {url_defect}""",
+                    'otk-bmg@bakulingroup.ru',
+                    [defect.responsible_executor.email],
+                    fail_silently=False,
+                )
             return redirect('defect', pk=defect.pk)
             # return redirect('home')
 
@@ -267,8 +269,7 @@ def edit_defect(request, id_defect):  # юзается только если з�
             quality_controller = request.user  # Надо проверить залогинен ли и выдать исключение
             # Надо проверить залогинен ли и выдать исключение
 
-            # Записываем полученные данные из формы в таблицу Defects
-            defect = Defects.objects.update(
+            Defects.objects.filter(pk=id_defect).update(
                 date_defect_detection=date_defect_detection,
                 term_up_to=term_up_to,
                 for_checking=for_checking,
@@ -284,14 +285,31 @@ def edit_defect(request, id_defect):  # юзается только если з�
                 quality_controller=quality_controller,
                 responsible_executor=workshop.responsible_executor,
             )
+            # Записываем полученные данные из формы в таблицу Defects
+
             # Загружаем изображения и прописываем их в таблице PhotoDefects
             for f in request.FILES.getlist('images'):
                 data = f.read()  # Если файл целиком умещается в памяти
                 photo = PhotoDefects(defect_id=id_defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
+
+            # current_defect = Defects.objects.get(pk=id_defect)
+
+            url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+            send_mail(
+                status,
+                f"""
+                Статус: {status},
+                Кузов: {body_number},
+                Цех: {workshop}
+                Тип: {type_of_discrepancy}
+                Ссылка на дефект: {url_defect}""",
+                'otk-bmg@bakulingroup.ru',
+                [defect.responsible_executor.email],
+                fail_silently=False,
+            )
             return redirect('defect', pk=id_defect)
-            # return redirect('home')
 
     if request.method == 'GET':
         form = DefectEditForm(instance=defect)

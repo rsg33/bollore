@@ -79,10 +79,27 @@
       <br> Контролер ОТК: {{ object.quality_controller.last_name }} {{ object.quality_controller.first_name }}
       <br> Ответственный исполнитель: {{ object.responsible_executor.last_name }}
       {{ object.responsible_executor.first_name }} <br>
+
+    <!-- Если ты контролер ОТК -->
       {% if request.user.groups.all.0.name == 'Control Inspectors' %}
-        <td><a href="edit/">Изменить</a> |
-          <a href="delete/">Удалить</a></td>
+          <a href="edit/">Изменить</a> |
+          <a href="delete/">Удалить</a>
+        <!-- Если на согласовании устранения в ОТК -->
+        {% if object.for_checking %}
+          <!-- тут ссылка на форму с отменой и комментом -->
+          {{ object.for_checking }}
+        {% endif %}
       {% endif %}
+
+    <!-- Если ты ответственный исполнитель -->
+    {% if request.user.groups.all.0.name == 'Responsible Executors' %}
+        <!-- Если на согласовании устранения в ОТК -->
+        {% if object.for_checking is False %}
+          <!-- тут ссылка на форму с отменой и комментом -->
+          {{ object.for_checking }}
+        {% endif %}
+      {% endif %}
+
     </div>
 
     <div class="row">

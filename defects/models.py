@@ -218,7 +218,7 @@ class Defects(models.Model):
         return reverse('defect', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return self.body_number.body_number
+        return str(self.pk)
 
     class Meta:
         verbose_name = 'дефект'
@@ -235,3 +235,14 @@ class PhotoDefects(models.Model):
         verbose_name = 'фото'
         verbose_name_plural = 'Фото дефектов'
         ordering = ['-uploaded_at']
+
+
+class Comments(models.Model):
+    comment = models.TextField(blank=True, verbose_name='Комментарии')
+    defect = models.ForeignKey(Defects, on_delete=models.CASCADE, related_name="comments", verbose_name='Дефект')
+    published_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-published_at']

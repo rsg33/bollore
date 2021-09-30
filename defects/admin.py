@@ -87,6 +87,15 @@ class PhotoDefectsAdmin(admin.ModelAdmin):
     list_display_links = ('defect',)
 
 
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = (
+        'comment',
+        'defect',
+        'published_at',
+    )
+    list_display_links = ('comment',)
+
+
 admin.site.register(TypeOfMismatch, TypeOfMismatchAdmin)
 admin.site.register(Details, DetailsAdmin)
 admin.site.register(Bodies, BodiesAdmin)
@@ -97,3 +106,4 @@ admin.site.register(Status, StatusAdmin)
 admin.site.register(Priority, PriorityAdmin)
 admin.site.register(Defects, DefectsAdmin)
 admin.site.register({PhotoDefects}, PhotoDefectsAdmin)
+admin.site.register(Comments, CommentsAdmin)

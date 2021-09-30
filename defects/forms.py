@@ -11,7 +11,7 @@ class UserLoginForm(AuthenticationForm):
 
 
 class DefectForm(forms.Form):
-    # date_defect_detection = forms.DateField(widget=forms.SelectDateWidget)
+    """Форма добавления дефекта"""
     date_defect_detection = forms.DateField(widget=forms.DateInput(
         attrs={'type': 'date',
                'class': 'form-control',
@@ -93,6 +93,7 @@ class DefectForm(forms.Form):
 
 
 class DefectEditForm(ModelForm):
+    """Форма редактирования дефекта"""
     date_defect_detection = forms.DateField(widget=forms.DateInput(
         attrs={'class': 'form-control',
                'placeholder': 'Select a date'
@@ -175,3 +176,4 @@ class DefectEditForm(ModelForm):
         model = Defects
         fields = 'date_defect_detection', 'term_up_to', 'priority', 'for_checking', 'status', 'workshop', 'detail', \
                  'body_number', 'type_of_discrepancy', 'discrepancy_description', 'images'
+

@@ -26,4 +26,6 @@ urlpatterns = [
 
     path('defect/<int:id_defect>/edit/', edit_defect, name='edit_defect'),
     path('defect/<int:pk>/delete/', DeleteDefectView.as_view(), name='delete_defect'),
+
+    # path('defect/<int:id_defect>/checking/<int:checking_id>/', edit_for_checking, name='edit_for_checking'),
 ]

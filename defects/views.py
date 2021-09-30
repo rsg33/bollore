@@ -294,14 +294,14 @@ def edit_defect(request, id_defect):  # юзается только если з�
                 photo = PhotoDefects(defect_id=id_defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
-            print(request.POST)
+
             if request.POST.get('email_notification', False):
                 url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
                 send_mail(
                     f'Изменился статус дефекта на: {status}',
                     f"""
-                    Статус: {status},
-                    Кузов: {body_number},
+                    Статус: {status}
+                    Кузов: {body_number}
                     Цех: {workshop}
                     Тип: {type_of_discrepancy}
                     Ссылка на дефект: {url_defect}""",
@@ -313,8 +313,32 @@ def edit_defect(request, id_defect):  # юзается только если з�
 
     if request.method == 'GET':
         form = DefectEditForm(instance=defect)
-        print(defect.pk)
     return render(request, 'defects/edit_defect.html', {'form': form, 'defect': defect})
+
+# @login_required(login_url='login')
+# def edit_for_checking(request, id_defect, checking_id):  # юзается только если залогинен
+#     """Статус согласования дефекта у ОТК"""
+#     if checking_id:
+#         Defects.objects.filter(pk=id_defect).update(for_checking=True,)
+#
+#     # url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+#     # send_mail(
+#     #     f'Изменился статус дефекта на: {status}',
+#     #     f"""
+#     #     Статус: {status},
+#     #     Кузов: {body_number},
+#     #     Цех: {workshop}
+#     #     Тип: {type_of_discrepancy}
+#     #     Ссылка на дефект: {url_defect}""",
+#     #     'otk-bmg@bakulingroup.ru',
+#     #     [defect.responsible_executor.email],
+#     #     fail_silently=False,
+#     # )
+#     return redirect('defect', pk=id_defect)
+#
+#     # if request.method == 'GET':
+#     #     form = ForCheckingDefect(instance=defect)
+#     # return render(request, 'defects/edit_for_checking.html', {'form': form, 'defect': defect})
 
 
 class DeleteDefectView(MyMixin, DeleteView):

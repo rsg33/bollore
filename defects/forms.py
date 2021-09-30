@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelForm
 
-
 from .models import *
 
 
@@ -90,11 +89,10 @@ class DefectForm(forms.Form):
         required=False,
         label='Фото')
 
-
+    email_notification = forms.BooleanField(initial=True, required=False, label='Оповещение по email')
 
 
 class DefectEditForm(ModelForm):
-    # date_defect_detection = forms.DateField(widget=forms.SelectDateWidget)
     date_defect_detection = forms.DateField(widget=forms.DateInput(
         attrs={'class': 'form-control',
                'placeholder': 'Select a date'
@@ -170,6 +168,8 @@ class DefectEditForm(ModelForm):
                }),
         required=False,
         label='Фото')
+
+    email_notification = forms.BooleanField(initial=True, required=False, label='Оповещение по email')
 
     class Meta:
         model = Defects

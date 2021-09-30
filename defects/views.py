@@ -226,7 +226,7 @@ def add_defect(request):  # юзается только если залогин�
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
 
-            if status.id == 1:
+            if status.id == 1 and request.POST.get('email_notification', False):
                 url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
                 send_mail(
                     status,
@@ -237,7 +237,7 @@ def add_defect(request):  # юзается только если залогин�
                     Тип: {type_of_discrepancy} 
                     Ссылка на дефект: {url_defect}""",
                     'otk-bmg@bakulingroup.ru',
-                    [defect.responsible_executor.email],
+                    ['s.rubtsov@bakulingroup.ru'],
                     fail_silently=False,
                 )
             return redirect('defect', pk=defect.pk)
@@ -294,22 +294,21 @@ def edit_defect(request, id_defect):  # юзается только если з�
                 photo = PhotoDefects(defect_id=id_defect)
                 photo.photo.save(f.name, ContentFile(data))
                 photo.save()
-
-            # current_defect = Defects.objects.get(pk=id_defect)
-
-            url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
-            send_mail(
-                status,
-                f"""
-                Статус: {status},
-                Кузов: {body_number},
-                Цех: {workshop}
-                Тип: {type_of_discrepancy}
-                Ссылка на дефект: {url_defect}""",
-                'otk-bmg@bakulingroup.ru',
-                [defect.responsible_executor.email],
-                fail_silently=False,
-            )
+            print(request.POST)
+            if request.POST.get('email_notification', False):
+                url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+                send_mail(
+                    f'Изменился статус дефекта на: {status}',
+                    f"""
+                    Статус: {status},
+                    Кузов: {body_number},
+                    Цех: {workshop}
+                    Тип: {type_of_discrepancy}
+                    Ссылка на дефект: {url_defect}""",
+                    'otk-bmg@bakulingroup.ru',
+                    [defect.responsible_executor.email],
+                    fail_silently=False,
+                )
             return redirect('defect', pk=id_defect)
 
     if request.method == 'GET':

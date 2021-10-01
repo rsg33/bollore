@@ -89,8 +89,9 @@ class PhotoDefectsAdmin(admin.ModelAdmin):
 
 class CommentsAdmin(admin.ModelAdmin):
     list_display = (
-        'comment',
         'defect',
+        'author',
+        'comment',
         'published_at',
     )
     list_display_links = ('comment',)

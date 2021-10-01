@@ -227,6 +227,7 @@ class Defects(models.Model):
 
 
 class PhotoDefects(models.Model):
+    """Фотографии дефектов"""
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото дефекта', blank=True)
     defect = models.ForeignKey(Defects, on_delete=models.CASCADE, related_name="images", verbose_name='Дефект')
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -238,11 +239,21 @@ class PhotoDefects(models.Model):
 
 
 class Comments(models.Model):
-    comment = models.TextField(blank=True, verbose_name='Комментарии')
+    """Комментарии к дефекту"""
     defect = models.ForeignKey(Defects, on_delete=models.CASCADE, related_name="comments", verbose_name='Дефект')
+    author = models.ForeignKey(User,
+                               on_delete=models.PROTECT,
+                               related_name='defects_author',
+                               verbose_name='Автор',
+                               null=True
+                               )
+    comment = models.TextField(blank=True, verbose_name='Комментарии')
     published_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ['-published_at']
+
+    def __str__(self):
+        return 'Комментарий от {} для дефекта {}'.format(self.author, self.defect)

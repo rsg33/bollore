@@ -177,3 +177,16 @@ class DefectEditForm(ModelForm):
         fields = 'date_defect_detection', 'term_up_to', 'priority', 'for_checking', 'status', 'workshop', 'detail', \
                  'body_number', 'type_of_discrepancy', 'discrepancy_description', 'images'
 
+
+class EditCheckingForm(ModelForm):
+    """Форма добавления коментария к дефекту"""
+    comment = forms.CharField(widget=forms.Textarea(attrs={
+        'class': "form-control",
+        "rows": 5
+    }),
+        label='Комментарий'
+    )
+
+    class Meta:
+        model = Comments
+        fields = 'comment',

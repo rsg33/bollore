@@ -80,23 +80,23 @@
       <br> Ответственный исполнитель: {{ object.responsible_executor.last_name }}
       {{ object.responsible_executor.first_name }} <br>
 
-    <!-- Если ты контролер ОТК -->
+      <!-- Если ты контролер ОТК -->
       {% if request.user.groups.all.0.name == 'Control Inspectors' %}
-          <a href="edit/">Изменить</a> |
-          <a href="delete/">Удалить</a>
+        <a href="edit/">Изменить</a> |
+        <a href="delete/">Удалить</a>
         <!-- Если на согласовании устранения в ОТК -->
         {% if object.for_checking %}
           <!-- тут ссылка на форму с отменой и комментом -->
-          {{ object.for_checking }}
+          | <a href="checking/">На доработку</a>
         {% endif %}
       {% endif %}
 
-    <!-- Если ты ответственный исполнитель -->
-    {% if request.user.groups.all.0.name == 'Responsible Executors' %}
+      <!-- Если ты ответственный исполнитель -->
+      {% if request.user.groups.all.0.name == 'Responsible Executors' %}
         <!-- Если на согласовании устранения в ОТК -->
         {% if object.for_checking is False %}
           <!-- тут ссылка на форму с отменой и комментом -->
-          {{ object.for_checking }}
+           <a href="checking/">На проверку</a>
         {% endif %}
       {% endif %}
 
@@ -119,6 +119,45 @@
         </div>
       </div>
     </div>
+
+{#    <div class="row">#}
+{#      <div class="card-body">#}
+{#        <div class="media">#}
+{#          {% if comments %}#}
+{#            {% for i in comments %}#}
+{#              <div class="card-header">#}
+{#                {{ i.author }}#}
+{#              </div>#}
+{#              #}
+{#              {{ i.comment }}#}
+{#            {% endfor %}#}
+{#          {% else %}#}
+{#            <p>ФОТО НЕ ЗАГРУЖЕНО</p>#}
+{#            <div class="col-sm-6 col-md-4 col-lg-3 ">#}
+{#              <img src="https://audiobaby.net/img/audioskazki/domovjonok-kuzja.jpg" alt="" width="350"#}
+{#                   class="img-fluid img-thumbnail" tabindex="0">#}
+{#            </div>#}
+{#          {% endif %}#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+
+      {% if comments %}
+            {% for i in comments %}
+               <div class="card mb-3">
+              <div class="card-header">
+               Автор: {{ i.author.get_full_name }}
+              </div>
+            <div class="card-header">
+              Комментариий: {{ i.comment }}
+              </div> </div>
+
+            {% endfor %}
+          {% else %}
+            <p>Комментариев нет</p>
+
+          {% endif %}
+
 
     <div class="card-footer text-muted">
       {{ object.created_at|date:"Y-m-d H:i:s" }}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+
+  <h1 xmlns="http://www.w3.org/1999/html">Проверка дефекта</h1>
+  <form id="form" method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+  </form>
+  <br><br>
+{% endblock %}

@@ -48,6 +48,7 @@ class ViewDefect(MyMixin, DetailView):
         context = super(ViewDefect, self).get_context_data(**kwargs)
         context['title'] = 'Выбранный дефект'  # Объявляем заголовок
         context['photos'] = PhotoDefects.objects.filter(defect_id=self.object.pk)
+        context['comments'] = Comments.objects.filter(defect_id=self.object.pk)
         a = self.object.type_of_discrepancy.probability_estimate.score  # Балл оценки вероятности дефекта
         b = self.object.type_of_discrepancy.scale_consequences.score  # Балл масштаба последствий дефекта
         risk_level = a * b  # Балл уровня риска
@@ -227,21 +228,25 @@ def add_defect(request):  # юзается только если залогин�
                 photo.save()
 
             if status.id == 1 and request.POST.get('email_notification', False):
+                # Если статус дефекта = 'ОБНАРУЖЕН ДЕФЕКТ' и из формы пришел маркер отправить емайл
+                # Формируем ссылку на дефект и отправляем письмо
                 url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
                 send_mail(
                     status,
                     f"""
-                    Статус: {status},
-                    Кузов: {body_number},
-                    Цех: {workshop} 
-                    Тип: {type_of_discrepancy} 
+                    Статус: {status}
+                    Номер кузова: {body_number}
+                    Дата обнаружения: {date_defect_detection}
+                    Срок до: {term_up_to}
+                    Цех: {workshop}
+                    Количество несоответствий: {number_of_inconsistencies}
+                    Тип несоответстия: {type_of_discrepancy}
                     Ссылка на дефект: {url_defect}""",
                     'otk-bmg@bakulingroup.ru',
                     ['s.rubtsov@bakulingroup.ru'],
                     fail_silently=False,
                 )
             return redirect('defect', pk=defect.pk)
-            # return redirect('home')
 
     else:
         form = DefectForm()
@@ -296,14 +301,18 @@ def edit_defect(request, id_defect):  # юзается только если з�
                 photo.save()
 
             if request.POST.get('email_notification', False):
+                # Из формы пришел маркер отправить емайл, ормируем ссылку на дефект и отправляем письмо
                 url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
                 send_mail(
                     f'Изменился статус дефекта на: {status}',
                     f"""
                     Статус: {status}
-                    Кузов: {body_number}
+                    Номер кузова: {body_number}
+                    Дата обнаружения: {date_defect_detection}
+                    Срок до: {term_up_to}
                     Цех: {workshop}
-                    Тип: {type_of_discrepancy}
+                    Количество несоответствий: {number_of_inconsistencies}
+                    Тип несоответстия: {type_of_discrepancy}
                     Ссылка на дефект: {url_defect}""",
                     'otk-bmg@bakulingroup.ru',
                     [defect.responsible_executor.email],
@@ -315,9 +324,48 @@ def edit_defect(request, id_defect):  # юзается только если з�
         form = DefectEditForm(instance=defect)
     return render(request, 'defects/edit_defect.html', {'form': form, 'defect': defect})
 
+
+@login_required(login_url='login')
+def edit_checking(request, id_defect):  # юзается только если залогинен
+    """Проверка дефекта, кнопка для изменения статуса На согласовании с ОТК и написания комментария"""
+    defect = Defects.objects.get(id=id_defect)
+    if request.method == 'POST':
+        form = EditCheckingForm(request.POST)
+        print(request.user.groups.all()[0].name)
+        if form.is_valid():
+            comment = form.cleaned_data['comment']
+            Comments.objects.create(defect=defect, author=request.user, comment=comment)
+            if defect.for_checking is True:
+                Defects.objects.filter(pk=id_defect).update(for_checking=False)
+                subj = f'Возврат дефекта №{defect.id} на доработку'
+                recipient = defect.responsible_executor.email
+            elif defect.for_checking is False:
+                Defects.objects.filter(pk=id_defect).update(for_checking=True)
+                subj = f'Дефект №{defect.id} на проверку'
+                recipient = 's.rubtsov@bakulingroup.ru'
+
+            url_defect = f'http://{get_current_site(request)}{defect.get_absolute_url()}'
+            send_mail(
+                subj,
+                f"""
+                Статус: {defect.status},
+                Кузов: {defect.body_number},
+                Тип: {defect.type_of_discrepancy} 
+                Ссылка на дефект: {url_defect}""",
+                'otk-bmg@bakulingroup.ru',
+                [recipient],
+                fail_silently=False,
+            )
+            return redirect('defect', pk=id_defect)
+
+    if request.method == 'GET':
+        form = EditCheckingForm(instance=defect)
+    return render(request, 'defects/edit_checking.html', {'form': form, 'defect': defect})
+
+
 # @login_required(login_url='login')
-# def edit_for_checking(request, id_defect, checking_id):  # юзается только если залогинен
-#     """Статус согласования дефекта у ОТК"""
+# def edit_checking(request, id_defect, checking_id):  # юзается только если залогинен
+#     """Статус и комментарий согласования дефекта у ОТК"""
 #     if checking_id:
 #         Defects.objects.filter(pk=id_defect).update(for_checking=True,)
 #

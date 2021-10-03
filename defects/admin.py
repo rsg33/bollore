@@ -4,7 +4,7 @@ from .models import *
 
 
 class TypeOfMismatchAdmin(admin.ModelAdmin):
-    list_display = ('mismatch',)
+    list_display = ('mismatch', 'probability_estimate', 'scale_consequences')
     list_display_links = ('mismatch',)
 
 

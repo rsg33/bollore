@@ -89,6 +89,7 @@ class ProbabilityEstimate(models.Model):
     class Meta:
         verbose_name = 'оценка вероятности'
         verbose_name_plural = 'Оценки вероятности'
+        ordering = ['id']
 
         # (1, 'Крайне маловероятно'),
         # (2, 'Маловероятно'),
